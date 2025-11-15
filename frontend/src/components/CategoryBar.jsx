@@ -1,14 +1,13 @@
 import { useState } from "react";
 
 const categories = [
-  "Top Stories",
-  "World",
   "Business",
   "Technology",
   "Sports",
   "Entertainment",
   "Health",
-  "Science"
+  "Science",
+  "General"
 ];
 
 const CategoryBar = () => {
