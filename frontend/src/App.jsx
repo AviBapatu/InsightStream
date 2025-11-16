@@ -11,6 +11,9 @@ import Login from "./pages/auth/Login";
 import Signup from "./pages/auth/Signup";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { useAuthStore } from "./store/useAuthStore";
+import ReaderPanel from "./components/ReaderPanel";
+import ArticlePage from "./pages/ArticlePage";
+
 
 function App() {
   const validateToken = useAuthStore((s) => s.validateToken);
@@ -19,19 +22,25 @@ function App() {
   }, []);
 
   return (
-    <Router>
-      <Routes>
-        <Route element={<AuthLayout />}>
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
-        </Route>
+  <Router>
+    <Routes>
+      <Route element={<AuthLayout />}>
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
+      </Route>
 
-        <Route path="/home" element={<Home />} />
+      <Route path="/home" element={<Home />} />
+      <Route path="/article/:id" element={<ArticlePage />} />
 
-        <Route path="*" element={<Navigate to="/login" />} />
-      </Routes>
-    </Router>
-  );
+
+      <Route path="*" element={<Navigate to="/login" />} />
+    </Routes>
+
+    {/* SIDE PANEL ALWAYS MOUNTED */}
+    <ReaderPanel />
+  </Router>
+);
+
 }
 
 export default App;

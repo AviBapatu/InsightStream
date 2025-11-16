@@ -1,7 +1,4 @@
 import NewsCard from "./NewsCard";
-import { useNavigate } from "react-router-dom";
-import { useIsDesktop } from "../hooks/useIsDesktop";
-import { useReaderStore } from "../store/useReaderStore";
 
 const NewsGrid = ({ articles = [], loading }) => {
   if (loading) {
