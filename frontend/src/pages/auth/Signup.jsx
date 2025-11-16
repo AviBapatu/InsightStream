@@ -1,84 +1,89 @@
-import { Link } from "react-router-dom";
+import { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import { useAuthStore } from "../../store/useAuthStore";
 
 const Signup = () => {
+  const navigate = useNavigate();
+  const signup = useAuthStore((s) => s.signup);
+  const loading = useAuthStore((s) => s.loading);
+
+  const [form, setForm] = useState({ name: "", email: "", password: "" });
+  const [error, setError] = useState("");
+
+  const handleChange = (e) =>
+    setForm({ ...form, [e.target.name]: e.target.value });
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
+
+    try {
+      await signup(form.name, form.email, form.password);
+      navigate("/home");
+    } catch (err) {
+      setError(err.message || "Signup failed");
+    }
+  };
+
   return (
     <div>
-      {/* Title */}
-      <h1 className="title-auth">
-        Create your account
-      </h1>
+      <h2 className="title-auth">Create an account</h2>
+      <p className="subtitle-auth">Start exploring personalised news</p>
 
-      {/* Subtitle */}
-      <p className="subtitle-auth">
-        Join the news platform
-      </p>
+      {error && <p className="text-red-600 text-sm mb-3">{error}</p>}
 
-      {/* Form */}
-      <form className="form-section">
+      <form onSubmit={handleSubmit} className="form-section">
 
-        {/* Name */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Name
+          <label className="text-sm font-medium text-gray-700 mb-1 block">
+            Full Name
           </label>
           <input
             type="text"
+            name="name"
             className="input-style"
+            value={form.name}
+            onChange={handleChange}
+            required
           />
         </div>
 
-        {/* Email */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="text-sm font-medium text-gray-700 mb-1 block">
             Email
           </label>
           <input
             type="email"
+            name="email"
             className="input-style"
+            value={form.email}
+            onChange={handleChange}
+            required
           />
         </div>
 
-        {/* Password */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="text-sm font-medium text-gray-700 mb-1 block">
             Password
           </label>
           <input
             type="password"
+            name="password"
             className="input-style"
+            value={form.password}
+            onChange={handleChange}
+            required
           />
         </div>
 
-        {/* Confirm Password */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Confirm Password
-          </label>
-          <input
-            type="password"
-            className="input-style"
-          />
-        </div>
-
-        {/* CTA */}
-        <div className="mt-2">
-          <button
-            type="submit"
-            className="btn-style"
-            >
-            Create Account
-          </button>
-        </div>
-
+        <button type="submit" disabled={loading} className="btn-style">
+          {loading ? "Creating..." : "Create account"}
+        </button>
       </form>
 
-      {/* Bottom Link */}
       <p className="bottom-link">
         Already have an account?{" "}
-        <Link
-          to="/login"
-          className="font-medium text-gold-700 hover:underline"
-        >
+        <Link to="/login" className="text-gold-700 underline">
           Sign in
         </Link>
       </p>

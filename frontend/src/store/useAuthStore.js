@@ -9,21 +9,27 @@ export const useAuthStore = create((set) => ({
 
   validateToken: () => {
     const token = localStorage.getItem("token");
-    if (!token) return set({ token: null });
+    if (!token) return set({ token: null, user: null });
 
     try {
       const decoded = jwtDecode(token);
-      const isExpired = decoded.exp * 1000 < Date.now();
+      const expired = decoded.exp * 1000 < Date.now();
 
-      if (isExpired) {
+      if (expired) {
         localStorage.removeItem("token");
-        set({ token: null });
-      } else {
-        set({ token });
+        localStorage.removeItem("user");
+        set({ token: null, user: null });
+        return;
       }
-    } catch {
+
+      // Restore user object from localStorage if valid
+      const savedUser = JSON.parse(localStorage.getItem("user") || "null");
+      set({ token, user: savedUser });
+
+    } catch (e) {
       localStorage.removeItem("token");
-      set({ token: null });
+      localStorage.removeItem("user");
+      set({ token: null, user: null });
     }
   },
 
@@ -32,24 +38,50 @@ export const useAuthStore = create((set) => ({
 
     try {
       const res = await api.post("/signup", { name, email, password });
-      const token = res.data.token;
+      const { token } = res.data;
+
+      // decode so we get the id
+      const decoded = jwtDecode(token);
+
+      const user = {
+        id: decoded.id,
+        name,
+        email,
+      };
+
       localStorage.setItem("token", token);
-      set({ token, user: { name, email }, loading: false });
+      localStorage.setItem("user", JSON.stringify(user));
+
+      set({ token, user, loading: false });
       return true;
+
     } catch (e) {
       set({ loading: false });
-      throw e.response?.data || {message: "Signup failed"}
+      throw e.response?.data || { message: "Signup failed" };
     }
   },
 
   login: async (email, password) => {
     set({ loading: true });
+
     try {
       const res = await api.post("/login", { email, password });
-      const token = res.data.token;
+      const { token } = res.data;
+
+      const decoded = jwtDecode(token);
+
+      const user = {
+        id: decoded.id,
+        email,
+        name: res.data.name, // backend also returns name
+      };
+
       localStorage.setItem("token", token);
-      set({ token, user: { email }, loading: false });
+      localStorage.setItem("user", JSON.stringify(user));
+
+      set({ token, user, loading: false });
       return true;
+
     } catch (e) {
       set({ loading: false });
       throw e.response?.data || { message: "Login failed" };
@@ -59,6 +91,6 @@ export const useAuthStore = create((set) => ({
   logout: () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
-    set(({ user: null, token: null }));
-  }
-}))
+    set({ user: null, token: null });
+  },
+}));
