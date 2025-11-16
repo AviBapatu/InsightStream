@@ -1,134 +1,151 @@
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-
 import { useIsDesktop } from "../hooks/useIsDesktop";
 import { useReaderStore } from "../store/useReaderStore";
-
 import { useAuthStore } from "../store/useAuthStore";
-import { useBookmarksStore } from "../store/useBookmarksStore"; 
-import { useGuestBookmarksStore } from "../store/useGuestBookmarksStore";
+import { useBookmarksStore } from "../store/useBookmarksStore";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
 
-import GuestSaveDialog from "./modals/GuestSaveDialog";
+dayjs.extend(relativeTime);
 
-const NewsCard = ({ article, index }) => {
+const NewsCard = ({ article, mode = "default", savedData }) => {
   const navigate = useNavigate();
   const isDesktop = useIsDesktop();
 
   const openReader = useReaderStore((s) => s.openReader);
-
-  // Auth state
   const user = useAuthStore((s) => s.user);
   const token = useAuthStore((s) => s.token);
 
-  // Permanent bookmark system
+  const bookmarks = useBookmarksStore((s) => s.bookmarks);
   const addBookmark = useBookmarksStore((s) => s.addBookmark);
   const removeBookmark = useBookmarksStore((s) => s.removeBookmark);
-  const permanentBookmarks = useBookmarksStore((s) => s.bookmarks);
 
-  // Guest bookmark system
-  const guestAdd = useGuestBookmarksStore((s) => s.add);
-  const guestRemove = useGuestBookmarksStore((s) => s.remove);
-  const guestIsSaved = useGuestBookmarksStore((s) => s.isSaved);
-  const guestBookmarks = useGuestBookmarksStore((s) => s.bookmarks);
+  // -------------------------
+  // IS SAVED?
+  // reactive — updates star instantly
+  // -------------------------
+  const isSaved = bookmarks.some((b) => b.article.url === article.url);
 
-  // Dialog state
-  const [dialogOpen, setDialogOpen] = useState(false);
-
-  // Determine saved state
-  const isPermanentSaved = !!permanentBookmarks.find(
-    (b) => b.article.url === article.url
-  );
-  const isGuestSaved = guestIsSaved(article.url);
-
-  const isSaved = isPermanentSaved || isGuestSaved;
-
-  // Handle save click
-  const handleBookmark = async (e) => {
-    e.stopPropagation();
-
-    if (user) {
-      // LOGGED-IN: Permanent bookmark
-      if (isPermanentSaved) {
-        const target = permanentBookmarks.find(
-          (b) => b.article.url === article.url
-        );
-        await removeBookmark(target?.id ?? article.url, token);
-      } else {
-        await addBookmark(article, token);
-      }
+  // -------------------------
+  // CLICK BEHAVIOR
+  // -------------------------
+  const handleClick = () => {
+    if (mode === "saved") {
+      navigate(`/article/${savedData?.id || article.url}`, {
+        state: { article },
+      });
       return;
     }
 
-    // NOT LOGGED-IN → Open dialog
-    setDialogOpen(true);
-  };
-
-  // Guest continues without login
-  const guestContinue = () => {
-    if (isGuestSaved) {
-      guestRemove(article.url);
-    } else {
-      guestAdd(article);
-    }
-  };
-
-  const handleClickCard = () => {
+    // Default mode
     if (isDesktop) {
       openReader(article);
     } else {
-      navigate(`/article/${index}`, { state: { article } });
+      navigate(`/article/${article.url}`, { state: { article } });
     }
   };
 
+  // -------------------------
+  // REMOVE SAVED
+  // -------------------------
+  const onRemove = async (e) => {
+    e.stopPropagation();
+    if (!savedData) return;
+    await removeBookmark(savedData.id || savedData.article.url, token);
+  };
+
+  // -------------------------
+  // CARD CLASSES
+  // -------------------------
+  const baseClasses =
+    "rounded-2xl overflow-hidden bg-white border border-gray-200 transition-all duration-300";
+
+  const hoverClasses =
+    mode === "default"
+      ? "hover:shadow-lg hover:-translate-y-1 cursor-pointer"
+      : "cursor-pointer";
+
   return (
-    <>
-      {/* Card */}
-      <div
-        onClick={handleClickCard}
-        className="cursor-pointer rounded-2xl overflow-hidden bg-white border border-gray-200 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
-      >
-        {/* Image */}
-        <div className="aspect-video bg-gray-200 relative">
-          {article?.urlToImage && (
-            <img
-              src={article.urlToImage}
-              className="w-full h-full object-cover"
-            />
-          )}
-
-          {/* Save Button */}
-          <button
-            onClick={handleBookmark}
-            className={`absolute top-3 right-3 z-10 px-2 py-1 rounded bg-white/80 backdrop-blur-sm text-sm
-              ${isSaved ? "text-gold-700 font-medium" : "text-gray-600"}
-            `}
-          >
-            {isSaved ? "Saved" : "Save"}
-          </button>
-        </div>
-
-        {/* Content */}
-        <div className="p-5">
-          <h3 className="font-medium text-lg md:text-xl text-gray-900 leading-snug tracking-tight line-clamp-3">
-            {article?.title}
-          </h3>
-
-          <div className="text-[11px] md:text-xs text-gray-500 mt-3">
-            {article?.source?.name} ·{" "}
-            {article?.publishedAt
-              ? new Date(article.publishedAt).toLocaleTimeString()
-              : ""}
-          </div>
-        </div>
+    <div className={`${baseClasses} ${hoverClasses}`} onClick={handleClick}>
+      {/* IMAGE */}
+      <div className="aspect-video bg-gray-200">
+        {article.urlToImage && (
+          <img
+            src={article.urlToImage}
+            alt=""
+            className="w-full h-full object-cover"
+          />
+        )}
       </div>
 
-      {/* Guest Save Dialog */}
-      <GuestSaveDialog
-        open={dialogOpen}
-        onClose={() => setDialogOpen(false)}
-        onContinue={guestContinue}
-      />
-    </>
+      {/* CONTENT */}
+      <div className="p-5 relative">
+        {/* TITLE */}
+        <h3 className="font-medium text-lg md:text-xl text-gray-900 leading-snug tracking-tight line-clamp-3">
+          {article.title}
+        </h3>
+
+        {/* DEFAULT MODE META */}
+        {mode === "default" && (
+          <div className="text-[11px] md:text-xs text-gray-500 mt-3">
+            {article.source?.name} · {dayjs(article.publishedAt).fromNow()}
+          </div>
+        )}
+
+        {/* SAVED MODE META */}
+        {mode === "saved" && savedData && (
+          <div className="text-[11px] md:text-xs text-gray-500 mt-3">
+            Saved · {dayjs(savedData.savedAt).fromNow()}
+          </div>
+        )}
+
+        {/* SAVE BUTTON — DEFAULT MODE */}
+        {mode === "default" && (
+          <button
+            onClick={async (e) => {
+              e.stopPropagation();
+
+              if (isSaved) {
+                // remove bookmark
+                await removeBookmark(article.url, token);
+              } else {
+                // add bookmark
+                await addBookmark(article, token);
+              }
+            }}
+            className="
+              absolute top-4 right-4 
+              bg-white/90 backdrop-blur-sm shadow 
+              w-8 h-8 rounded-full 
+              flex items-center justify-center
+              hover:bg-white 
+              transition-all duration-200
+              active:scale-90
+            "
+          >
+            {isSaved ? "★" : "☆"}
+          </button>
+        )}
+
+        {/* REMOVE BUTTON — SAVED MODE */}
+        {mode === "saved" && (
+          <button
+            onClick={onRemove}
+            className="
+              absolute top-4 right-4 
+              bg-white border border-gray-300 
+              w-7 h-7 rounded-full 
+              text-sm text-gray-700 
+              flex items-center justify-center
+              hover:bg-gray-100
+              transition
+            "
+          >
+            ✕
+          </button>
+        )}
+      </div>
+    </div>
   );
 };
 

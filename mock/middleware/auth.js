@@ -14,10 +14,19 @@ export const protectedRoutes = (protectedPaths = []) => {
 
     const token = authHeader.split(" ")[1];
     const SECRET = process.env.JWT_SUPER_SECRET_KEY;
+
     try {
-      jwt.verify(token, SECRET);
+      const decoded = jwt.verify(token, SECRET);
+
+      
+      req.user = {
+        id: decoded.id,
+        email: decoded.email,
+      };
+      
+
       next();
-    } catch {
+    } catch (e) {
       return res.status(401).json({ message: "Invalid or expired token" });
     }
   };

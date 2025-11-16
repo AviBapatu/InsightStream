@@ -10,7 +10,8 @@ import Home from "./pages/Home";
 import AuthLayout from "./pages/auth/AuthLayout";
 import Login from "./pages/auth/Login";
 import Signup from "./pages/auth/Signup";
-import Saved from "./pages/Saved";
+import SavedPage from "./pages/SavedPage";
+import ProfilePage from "./pages/ProfilePage";
 
 import ArticlePage from "./pages/ArticlePage";
 import ReaderPanel from "./components/ReaderPanel";
@@ -72,7 +73,8 @@ function App() {
 
         <Route path="/home" element={<Home />} />
         <Route path="/article/:id" element={<ArticlePage />} />
-        <Route path="/saved" element={<Saved />} />
+        <Route path="/saved" element={<SavedPage />} />
+        <Route path="/profile" element={<ProfilePage />} />
 
         <Route path="*" element={<Navigate to="/login" />} />
       </Routes>

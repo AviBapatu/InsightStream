@@ -13,6 +13,10 @@ const middlewares = jsonServer.defaults();
 server.use(cors());
 server.use(jsonServer.bodyParser);
 server.use(middlewares);
+server.use(
+  protectedRoutes(["/bookmarks", "/profile", "/home"])
+);
+
 
 server.post("/signup", (req, res) => {
   try {
@@ -139,10 +143,6 @@ server.delete("/bookmarks/:id", (req, res) => {
   }
 });
 
-
-server.use(
-  protectedRoutes(["/bookmarks", "/profile", "/feed"])
-);
 
 server.use(router);
 const PORT = process.env.PORT || 5000;
