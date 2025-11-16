@@ -8,7 +8,7 @@ dotenv.config();
 const app = express();
 app.use(cors());
 
-const NEWS_API_KEY = process.env.NEWSAPI_KEY;
+const NEWS_API_KEY = process.env.NEWS_API_KEY;
 
 // In-memory cache
 const cache = new Map();
@@ -24,7 +24,7 @@ const buildKey = (params) => JSON.stringify(params);
 
 app.get("/api/news", async (req, res) => {
   try {
-    const { q, category, page = 1, pageSize = 20, country = "in" } = req.query;
+    const { q, category, page = 1, pageSize = 20, country = "us" } = req.query;
 
     const mode = q
       ? "search"
