@@ -2,7 +2,7 @@ const NewsCard = () => {
   return (
     <div className="rounded-2xl overflow-hidden bg-white border border-gray-200 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
       {/* Image area */}
-      <div className="aspect-[16/9] bg-gray-200">
+      <div className="aspect-video bg-gray-200">
         {/* Real image will go here later */}
         {/* <img src={data.image} className="w-full h-full object-cover" /> */}
       </div>
