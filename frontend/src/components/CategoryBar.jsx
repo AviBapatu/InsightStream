@@ -10,8 +10,7 @@ const categories = [
   "General"
 ];
 
-const CategoryBar = () => {
-  const [active, setActive] = useState("Top Stories");
+const CategoryBar = ({ activeCategory, setActiveCategory }) => {
 
   return (
     <div className="w-full bg-white border-b border-gray-200">
@@ -21,12 +20,12 @@ const CategoryBar = () => {
         <div className="flex gap-6 overflow-x-auto scrollbar-hide h-12 items-center">
 
           {categories.map((cat) => {
-            const isActive = active === cat;
+            const isActive = activeCategory  === cat;
 
             return (
               <button
                 key={cat}
-                onClick={() => setActive(cat)}
+                onClick={() => setActiveCategory(cat)}
                 className={
                   isActive
                     ? "px-4 py-1.5 bg-gold-600 text-white font-medium rounded-full transition-all duration-200 ease-out active:scale-[0.97] whitespace-nowrap"
