@@ -53,14 +53,14 @@ function App() {
   }, []);
 
   useEffect(() => {
-    useGuestBookmarksStore.getState().load();
-  }, []);
-
-  useEffect(() => {
-    if (user?.id) {
+    if (user?.id && token) {
       initBookmarks(user.id, token);
     }
-  }, [user?.id]);
+  }, [user?.id, token]);
+
+  useEffect(() => {
+    useGuestBookmarksStore.getState().load();
+  }, []);
 
   useBookmarksSyncOnConnectivity();
 

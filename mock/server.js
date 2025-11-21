@@ -25,7 +25,7 @@ const avatarList = [
 server.use(cors());
 server.use(jsonServer.bodyParser);
 server.use(middlewares);
-protectedRoutes(["/bookmarks", "/profile", "/feed", "/users"]);
+server.use(protectedRoutes(["/bookmarks", "/profile", "/feed", "/users"]));
 
 server.post("/signup", (req, res) => {
   try {
@@ -113,7 +113,8 @@ server.patch("/users/:id/avatar", (req, res) => {
     const existing = db.get("users").find({ id }).value();
 
     if (!existing) return res.status(404).json({ message: "User not found" });
-    if (existing.id !== user.id) return res.status(403).json({ message: "Forbidden" });
+    if (existing.id !== user.id)
+      return res.status(403).json({ message: "Forbidden" });
 
     db.get("users").find({ id }).assign({ avatar }).write();
 
@@ -123,7 +124,6 @@ server.patch("/users/:id/avatar", (req, res) => {
     return res.status(500).json({ message: "Internal server error" });
   }
 });
-
 
 // Create a bookmark
 server.post("/bookmarks", (req, res) => {

@@ -16,6 +16,7 @@ const Navbar = ({ searchQuery, setSearchQuery }) => {
   const logout = useAuthStore((s) => s.logout);
 
   const goSaved = () => navigate("/saved");
+  const goProfile = () => navigate("/profile");
   const goLogin = () => navigate("/login");
 
   return (

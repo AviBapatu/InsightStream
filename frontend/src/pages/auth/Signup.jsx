@@ -33,7 +33,6 @@ const Signup = () => {
       {error && <p className="text-red-600 text-sm mb-3">{error}</p>}
 
       <form onSubmit={handleSubmit} className="form-section">
-
         <div>
           <label className="text-sm font-medium text-gray-700 mb-1 block">
             Full Name
@@ -44,6 +43,7 @@ const Signup = () => {
             className="input-style"
             value={form.name}
             onChange={handleChange}
+            autoComplete="name"
             required
           />
         </div>
@@ -58,6 +58,7 @@ const Signup = () => {
             className="input-style"
             value={form.email}
             onChange={handleChange}
+            autoComplete="email"
             required
           />
         </div>
@@ -72,6 +73,7 @@ const Signup = () => {
             className="input-style"
             value={form.password}
             onChange={handleChange}
+            autoComplete="new-password"
             required
           />
         </div>

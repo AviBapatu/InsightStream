@@ -33,7 +33,6 @@ const Login = () => {
       {error && <p className="text-red-600 text-sm mb-3">{error}</p>}
 
       <form onSubmit={handleSubmit} className="form-section">
-
         <div>
           <label className="text-sm font-medium text-gray-700 mb-1 block">
             Email
@@ -44,6 +43,7 @@ const Login = () => {
             className="input-style"
             value={form.email}
             onChange={handleChange}
+            autoComplete="email"
             required
           />
         </div>
@@ -58,6 +58,7 @@ const Login = () => {
             className="input-style"
             value={form.password}
             onChange={handleChange}
+            autoComplete="current-password"
             required
           />
         </div>

@@ -9,8 +9,9 @@ export const protectedRoutes = (protectedPaths = []) => {
     if (!shouldProtect) return next();
 
     const authHeader = req.headers.authorization;
-    if (!authHeader)
+    if (!authHeader) {
       return res.status(403).json({ message: "missing token" });
+    }
 
     const token = authHeader.split(" ")[1];
     const SECRET = process.env.JWT_SUPER_SECRET_KEY;
@@ -18,15 +19,14 @@ export const protectedRoutes = (protectedPaths = []) => {
     try {
       const decoded = jwt.verify(token, SECRET);
 
-      
       req.user = {
         id: decoded.id,
         email: decoded.email,
       };
-      
 
       next();
     } catch (e) {
+      console.error("❌ Token verification failed:", e.message);
       return res.status(401).json({ message: "Invalid or expired token" });
     }
   };
