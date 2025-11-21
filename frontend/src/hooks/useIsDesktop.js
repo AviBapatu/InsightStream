@@ -1,12 +1,13 @@
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 
 export const useIsDesktop = () => {
-  const [isDesktop, setIsDesktop] = useState(window.innerWidth >= 1024);
+  const query = window.matchMedia("(min-width: 1024px)");
+  const [isDesktop, setIsDesktop] = useState(query.matches);
 
   useEffect(() => {
-    const handler = () => setIsDesktop(window.innerWidth >= 1024);
-    window.addEventListener("resize", handler);
-    return () => window.removeEventListener("resize", handler);
+    const listener = (e) => setIsDesktop(e.matches);
+    query.addEventListener("change", listener);
+    return () => query.removeEventListener("change", listener);
   }, []);
 
   return isDesktop;

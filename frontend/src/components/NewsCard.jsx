@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useIsDesktop } from "../hooks/useIsDesktop";
 import { useReaderStore } from "../store/useReaderStore";
@@ -5,7 +6,6 @@ import { useAuthStore } from "../store/useAuthStore";
 import { useBookmarksStore } from "../store/useBookmarksStore";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
-
 dayjs.extend(relativeTime);
 
 const NewsCard = ({ article, mode = "default", savedData }) => {
@@ -13,6 +13,7 @@ const NewsCard = ({ article, mode = "default", savedData }) => {
   const isDesktop = useIsDesktop();
 
   const openReader = useReaderStore((s) => s.openReader);
+
   const user = useAuthStore((s) => s.user);
   const token = useAuthStore((s) => s.token);
 
@@ -20,103 +21,106 @@ const NewsCard = ({ article, mode = "default", savedData }) => {
   const addBookmark = useBookmarksStore((s) => s.addBookmark);
   const removeBookmark = useBookmarksStore((s) => s.removeBookmark);
 
-  // -------------------------
-  // IS SAVED?
-  // reactive — updates star instantly
-  // -------------------------
+  const [isRemoving, setIsRemoving] = useState(false);
+
+  // Is this article already saved?
   const isSaved = bookmarks.some((b) => b.article.url === article.url);
 
-  // -------------------------
-  // CLICK BEHAVIOR
-  // -------------------------
-  const handleClick = () => {
-    if (mode === "saved") {
-      navigate(`/article/${savedData?.id || article.url}`, {
-        state: { article },
-      });
-      return;
-    }
+  // ---------------------
+// HANDLE CARD CLICK (robust + deterministic)
+// ---------------------
+const handleClick = () => {
+  const desktopNow = window.matchMedia("(min-width: 1024px)").matches;
 
-    // Default mode
-    if (isDesktop) {
-      openReader(article);
-    } else {
-      navigate(`/article/${article.url}`, { state: { article } });
-    }
-  };
+  // DESKTOP -> open ReaderPanel (Home + Saved)
+  if (desktopNow) {
+    openReader(article);
+    return;
+  }
 
-  // -------------------------
-  // REMOVE SAVED
-  // -------------------------
+  // MOBILE -> full page. encode the id so slashes in URL don't break route
+  const safeId = encodeURIComponent(article.url);
+  navigate(`/article/${safeId}`, { state: { article } });
+};
+
+
+  // -------------------------------------------------
+  // REMOVE (saved mode)
+  // -------------------------------------------------
   const onRemove = async (e) => {
     e.stopPropagation();
     if (!savedData) return;
-    await removeBookmark(savedData.id || savedData.article.url, token);
+
+    setIsRemoving(true);
+
+    setTimeout(async () => {
+      await removeBookmark(savedData.id || savedData.article.url, token);
+    }, 250);
   };
 
-  // -------------------------
-  // CARD CLASSES
-  // -------------------------
-  const baseClasses =
-    "rounded-2xl overflow-hidden bg-white border border-gray-200 transition-all duration-300";
-
-  const hoverClasses =
-    mode === "default"
-      ? "hover:shadow-lg hover:-translate-y-1 cursor-pointer"
-      : "cursor-pointer";
+  // -------------------------------------------------
+  // ROOT CLASSES
+  // -------------------------------------------------
+  const cardRootClasses = `
+    rounded-2xl overflow-hidden bg-white border border-gray-200 
+    transition-all duration-300
+    ${mode === "default" ? "hover:shadow-lg hover:-translate-y-1 cursor-pointer" : "cursor-pointer"}
+    ${isRemoving ? "opacity-0 scale-95" : ""}
+  `;
 
   return (
-    <div className={`${baseClasses} ${hoverClasses}`} onClick={handleClick}>
+    <div className={cardRootClasses} onClick={handleClick}>
+
       {/* IMAGE */}
-      <div className="aspect-video bg-gray-200">
-        {article.urlToImage && (
+      <div className="aspect-video bg-gray-100 flex items-center justify-center text-gray-400 text-xs">
+        {article.urlToImage ? (
           <img
             src={article.urlToImage}
-            alt=""
+            alt="article"
             className="w-full h-full object-cover"
           />
+        ) : (
+          "No Image"
         )}
       </div>
 
       {/* CONTENT */}
-      <div className="p-5 relative">
+      <div className={`p-5 ${mode === "saved" ? "pt-6" : ""} relative`}>
+        
         {/* TITLE */}
         <h3 className="font-medium text-lg md:text-xl text-gray-900 leading-snug tracking-tight line-clamp-3">
           {article.title}
         </h3>
 
-        {/* DEFAULT MODE META */}
+        {/* META — default */}
         {mode === "default" && (
           <div className="text-[11px] md:text-xs text-gray-500 mt-3">
             {article.source?.name} · {dayjs(article.publishedAt).fromNow()}
           </div>
         )}
 
-        {/* SAVED MODE META */}
+        {/* META — saved */}
         {mode === "saved" && savedData && (
-          <div className="text-[11px] md:text-xs text-gray-500 mt-3">
+          <div className="text-[12px] md:text-[13px] text-gray-500 mt-3">
             Saved · {dayjs(savedData.savedAt).fromNow()}
           </div>
         )}
 
-        {/* SAVE BUTTON — DEFAULT MODE */}
+        {/* BOOKMARK BUTTON (default mode) */}
         {mode === "default" && (
           <button
             onClick={async (e) => {
               e.stopPropagation();
-
               if (isSaved) {
-                // remove bookmark
                 await removeBookmark(article.url, token);
               } else {
-                // add bookmark
                 await addBookmark(article, token);
               }
             }}
             className="
               absolute top-4 right-4 
-              bg-white/90 backdrop-blur-sm shadow 
-              w-8 h-8 rounded-full 
+              bg-white/90 backdrop-blur-sm shadow-md 
+              w-8 h-8 rounded-full text-lg
               flex items-center justify-center
               hover:bg-white 
               transition-all duration-200
@@ -127,7 +131,7 @@ const NewsCard = ({ article, mode = "default", savedData }) => {
           </button>
         )}
 
-        {/* REMOVE BUTTON — SAVED MODE */}
+        {/* REMOVE BUTTON (saved page) */}
         {mode === "saved" && (
           <button
             onClick={onRemove}
@@ -138,7 +142,7 @@ const NewsCard = ({ article, mode = "default", savedData }) => {
               text-sm text-gray-700 
               flex items-center justify-center
               hover:bg-gray-100
-              transition
+              transition-all duration-200
             "
           >
             ✕

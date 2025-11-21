@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useIsDesktop } from "../hooks/useIsDesktop";
 import { useAuthStore } from "../store/useAuthStore";
 import { LuFolderHeart } from "react-icons/lu";
+import { IoSearchOutline } from "react-icons/io5";
 
 const Navbar = ({ searchQuery, setSearchQuery }) => {
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
@@ -51,6 +52,17 @@ const Navbar = ({ searchQuery, setSearchQuery }) => {
 
         {/* RIGHT SIDE */}
         <div className="flex items-center space-x-4 relative">
+
+          {/* MOBILE SEARCH ICON (moves inside right-side container) */}
+          {!isDesktop && (
+            <button
+              onClick={() => setMobileSearchOpen(true)}
+              className="text-xl text-gray-700 active:scale-90 transition"
+            >
+              <IoSearchOutline />
+            </button>
+          )}
+
           {/* DESKTOP SAVED ICON */}
           {isDesktop && (
             <button
@@ -84,34 +96,30 @@ const Navbar = ({ searchQuery, setSearchQuery }) => {
 
             {/* DROPDOWN MENU */}
             {isDesktop && menuOpen && (
-              <div className="absolute right-0 top-12 bg-white border border-gray-200 shadow-lg rounded-xl py-2 w-44 z-50">
+              <div
+                className="
+      absolute right-0 top-12 w-40 bg-white border border-gray-200 
+      shadow-lg rounded-xl p-2 flex flex-col space-y-1
+      animate-fade-slide
+    "
+              >
                 <button
-                  className="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
-                  onClick={() => {
-                    navigate("/saved");
-                    setMenuOpen(false);
-                  }}
-                >
-                  Saved Articles
-                </button>
-
-                <button
-                  className="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
-                  onClick={() => {
-                    navigate("/profile");
-                    setMenuOpen(false);
-                  }}
+                  onClick={goProfile}
+                  className="text-left px-3 py-2 rounded-md hover:bg-gray-100"
                 >
                   Profile
                 </button>
 
                 <button
-                  className="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
-                  onClick={() => {
-                    logout();
-                    navigate("/login");
-                    setMenuOpen(false);
-                  }}
+                  onClick={goSaved}
+                  className="text-left px-3 py-2 rounded-md hover:bg-gray-100"
+                >
+                  Saved
+                </button>
+
+                <button
+                  onClick={() => logout()}
+                  className="text-left px-3 py-2 rounded-md hover:bg-gray-100 text-red-500"
                 >
                   Logout
                 </button>
@@ -121,29 +129,36 @@ const Navbar = ({ searchQuery, setSearchQuery }) => {
         </div>
       </div>
 
-      {/* MOBILE SEARCH EXPANDED */}
-      {!isDesktop && mobileSearchOpen && (
-        <div className="px-4 py-3 flex items-center space-x-3 border-t border-gray-200 bg-white">
-          <button
-            onClick={() => setMobileSearchOpen(false)}
-            className="text-gray-700 text-lg"
-          >
-            ←
-          </button>
+      {/* MOBILE SEARCH PANEL — SLIDE DOWN */}
+      {!isDesktop && (
+        <div
+          className={`
+      transition-all duration-300 overflow-hidden border-t border-gray-200
+      ${mobileSearchOpen ? "max-h-20 opacity-100" : "max-h-0 opacity-0"}
+    `}
+        >
+          <div className="px-4 py-3 flex items-center space-x-3 bg-white">
+            {/* Back Button */}
+            <button
+              onClick={() => setMobileSearchOpen(false)}
+              className="text-xl text-gray-700 active:scale-90 transition"
+            >
+              ←
+            </button>
 
-          <input
-            type="text"
-            autoFocus
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search news..."
-            className="
-              flex-1 px-4 py-2 rounded-full
-              border border-gray-200
-              focus:ring-2 focus:ring-gold-500 focus:border-gold-500
-              transition-all duration-200
-            "
-          />
+            {/* Search Input */}
+            <input
+              type="text"
+              autoFocus={mobileSearchOpen}
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search news..."
+              className="
+          flex-1 px-4 py-2 rounded-full border border-gray-200 
+          focus:ring-2 focus:ring-gold-500 transition
+        "
+            />
+          </div>
         </div>
       )}
 
