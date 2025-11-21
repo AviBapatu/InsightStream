@@ -2,10 +2,11 @@ import { useState, useEffect, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useIsDesktop } from "../hooks/useIsDesktop";
 import { useAuthStore } from "../store/useAuthStore";
+import { useBookmarksStore } from "../store/useBookmarksStore";
 import { LuFolderHeart } from "react-icons/lu";
 import { IoSearchOutline } from "react-icons/io5";
 import { FiFilter, FiUser, FiLogOut } from "react-icons/fi";
-import { HiOutlineBookmark } from "react-icons/hi";
+import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import { motion, AnimatePresence } from "framer-motion";
 
 const Navbar = ({
@@ -23,6 +24,8 @@ const Navbar = ({
   const location = useLocation();
 
   const user = useAuthStore((s) => s.user);
+  const bookmarks = useBookmarksStore((s) => s.bookmarks);
+  const hasSavedArticles = bookmarks.length > 0;
   const logout = useAuthStore((s) => s.logout);
 
   const goSaved = () => {
@@ -75,7 +78,7 @@ const Navbar = ({
   }, [menuOpen]);
 
   return (
-    <header className="w-full bg-white border-b border-gold-700 relative z-40">
+    <header className="w-full bg-white/95 border-b border-gray-100 z-40 sticky top-0 backdrop-blur-sm">
       <div className="max-w-6xl mx-auto flex items-center justify-between h-16 px-4">
         {/* LEFT — LOGO */}
         <div
@@ -89,27 +92,41 @@ const Navbar = ({
 
         {/* MIDDLE — DESKTOP SEARCH BAR */}
         {isDesktop && (
-          <div className="flex-1 flex justify-center items-center gap-2">
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search news..."
-              className="
-                w-72 px-4 py-2 rounded-full
-                border border-gray-200
-                bg-white
-                focus:ring-2 focus:ring-gold-500 focus:border-gold-500 focus:outline-none
-                transition-all duration-200
-              "
-            />
+          <div className="flex-1 flex justify-center items-center gap-2 max-w-2xl mx-8">
+            <div className="relative flex-1">
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search news..."
+                className="
+                  w-full px-5 py-2.5 rounded-full
+                  border border-gray-200
+                  bg-gray-50/50
+                  text-sm
+                  focus:ring-2 focus:ring-gold-500 focus:border-gold-500 focus:outline-none
+                  focus:bg-white
+                  transition-all duration-200
+                  placeholder:text-gray-400
+                "
+              />
+              <IoSearchOutline className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 text-lg pointer-events-none" />
+            </div>
             {showFilterButton && (
               <button
                 onClick={onFilterToggle}
-                className="p-2 rounded-full hover:bg-gray-100 text-gray-700 hover:text-gold-700 transition-colors"
+                className="
+                  p-2.5 rounded-full 
+                  border border-gray-200
+                  bg-gray-50/50
+                  hover:bg-gray-100 
+                  text-gray-700 hover:text-gold-700 
+                  transition-all duration-200
+                  active:scale-95
+                "
                 title="Toggle filters"
               >
-                <FiFilter className="text-xl" />
+                <FiFilter className="text-lg" />
               </button>
             )}
           </div>
@@ -221,7 +238,11 @@ const Navbar = ({
                       relative group
                     "
                   >
-                    <HiOutlineBookmark className="text-lg" />
+                    {hasSavedArticles ? (
+                      <AiFillHeart className="text-lg text-gold-500" />
+                    ) : (
+                      <AiOutlineHeart className="text-lg" />
+                    )}
                     <span>Saved</span>
                     <div className="absolute left-0 top-0 bottom-0 w-[3px] bg-gold-500 rounded-r opacity-0 group-hover:opacity-100 transition-opacity" />
                   </button>
@@ -270,51 +291,103 @@ const Navbar = ({
         </div>
       </div>
 
-      {/* MOBILE SEARCH PANEL — SLIDE DOWN */}
-      {!isDesktop && (
-        <div
-          className={`
-      transition-all duration-300 overflow-hidden border-t border-gray-200
-      ${mobileSearchOpen ? "max-h-20 opacity-100" : "max-h-0 opacity-0"}
-    `}
-        >
-          <div className="px-4 py-3 flex items-center space-x-3 bg-white">
-            {/* Back Button */}
-            <button
+      {/* MOBILE SEARCH PANEL — SLIDE FROM BOTTOM */}
+      <AnimatePresence>
+        {!isDesktop && mobileSearchOpen && (
+          <>
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="fixed inset-0 bg-black/20 backdrop-blur-sm z-40"
               onClick={() => setMobileSearchOpen(false)}
-              className="text-xl text-gray-700 active:scale-90 transition"
-            >
-              ←
-            </button>
-
-            {/* Search Input */}
-            <input
-              type="text"
-              autoFocus={mobileSearchOpen}
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search news..."
-              className="
-          flex-1 px-4 py-2 rounded-full border border-gray-200 
-          focus:ring-2 focus:ring-gold-500 focus:border-gold-500 focus:outline-none transition
-        "
             />
 
-            {/* Filter Button (Mobile) */}
-            {showFilterButton && (
-              <button
-                onClick={() => {
-                  setMobileSearchOpen(false);
-                  onFilterToggle();
-                }}
-                className="text-xl text-gray-700 active:scale-90 transition"
-              >
-                <FiFilter />
-              </button>
-            )}
-          </div>
-        </div>
-      )}
+            {/* Search Panel */}
+            <motion.div
+              initial={{ translateY: "100%", opacity: 0 }}
+              animate={{ translateY: 0, opacity: 1 }}
+              exit={{ translateY: "100%", opacity: 0 }}
+              transition={{
+                duration: 0.25,
+                ease: "easeOut",
+              }}
+              className="
+                fixed bottom-0 left-0 right-0 
+                bg-white rounded-t-3xl 
+                border-t border-gray-200
+                shadow-2xl 
+                z-50 
+                p-6 pb-8
+              "
+            >
+              {/* Handle */}
+              <div className="w-12 h-1.5 bg-gray-300 rounded-full mx-auto mb-6" />
+
+              <div className="space-y-4">
+                {/* Search Input */}
+                <div className="relative">
+                  <input
+                    type="text"
+                    autoFocus={mobileSearchOpen}
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="Search news..."
+                    className="
+                      w-full px-5 py-3.5 rounded-2xl 
+                      border-2 border-gray-200 
+                      focus:ring-0 focus:border-gold-500 focus:outline-none 
+                      transition-all duration-200
+                      text-base
+                      placeholder:text-gray-400
+                    "
+                  />
+                  <IoSearchOutline className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 text-xl pointer-events-none" />
+                </div>
+
+                {/* Action Buttons */}
+                <div className="flex gap-3">
+                  {showFilterButton && (
+                    <button
+                      onClick={() => {
+                        setMobileSearchOpen(false);
+                        onFilterToggle();
+                      }}
+                      className="
+                        flex-1 flex items-center justify-center gap-2
+                        px-4 py-3 rounded-xl
+                        border border-gray-200
+                        bg-gray-50
+                        text-gray-700 font-medium
+                        active:bg-gray-100
+                        transition-all duration-200
+                        active:scale-95
+                      "
+                    >
+                      <FiFilter className="text-lg" />
+                      <span>Filters</span>
+                    </button>
+                  )}
+                  <button
+                    onClick={() => setMobileSearchOpen(false)}
+                    className="
+                      flex-1 px-6 py-3 rounded-xl
+                      bg-gold-600 text-white font-medium
+                      hover:bg-gold-700
+                      active:scale-95
+                      transition-all duration-200
+                    "
+                  >
+                    Search
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
 
       {/* MOBILE BOTTOM SHEET MENU */}
       <AnimatePresence>
@@ -389,7 +462,11 @@ const Navbar = ({
                     transition-all active:scale-95
                   "
                 >
-                  <HiOutlineBookmark className="text-xl" />
+                  {hasSavedArticles ? (
+                    <AiFillHeart className="text-xl text-gold-500" />
+                  ) : (
+                    <AiOutlineHeart className="text-xl" />
+                  )}
                   <span>Saved</span>
                 </button>
 

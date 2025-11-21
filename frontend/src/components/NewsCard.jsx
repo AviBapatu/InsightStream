@@ -4,6 +4,7 @@ import { useIsDesktop } from "../hooks/useIsDesktop";
 import { useReaderStore } from "../store/useReaderStore";
 import { useAuthStore } from "../store/useAuthStore";
 import { useBookmarksStore } from "../store/useBookmarksStore";
+import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 dayjs.extend(relativeTime);
@@ -103,14 +104,16 @@ const NewsCard = ({ article, mode = "default", savedData }) => {
               hover:scale-125
               active:scale-95
               leading-none
-              drop-shadow-lg
             "
             style={{
               filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.3))",
-              color: isSaved ? "#B7892E" : "#FFFFFF",
             }}
           >
-            <span className="block">{isSaved ? "★" : "☆"}</span>
+            {isSaved ? (
+              <AiFillHeart className="text-[#B7892E]" />
+            ) : (
+              <AiOutlineHeart className="text-white" />
+            )}
           </button>
         )}
 

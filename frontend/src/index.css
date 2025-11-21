@@ -57,4 +57,30 @@
     @apply text-sm text-gray-600 mt-10 text-center;
   }
 
+  /* Premium scrollbar hiding */
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
 }
+
+/* Global styles for premium feel */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Smooth transitions for aspect ratios */
+.aspect-video,
+.aspect-3\/2 {
+  @apply overflow-hidden;
+}
+
