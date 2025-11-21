@@ -4,8 +4,14 @@ import { useIsDesktop } from "../hooks/useIsDesktop";
 import { useAuthStore } from "../store/useAuthStore";
 import { LuFolderHeart } from "react-icons/lu";
 import { IoSearchOutline } from "react-icons/io5";
+import { FiFilter } from "react-icons/fi";
 
-const Navbar = ({ searchQuery, setSearchQuery }) => {
+const Navbar = ({
+  searchQuery,
+  setSearchQuery,
+  onFilterToggle,
+  showFilterButton,
+}) => {
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -61,7 +67,7 @@ const Navbar = ({ searchQuery, setSearchQuery }) => {
 
         {/* MIDDLE — DESKTOP SEARCH BAR */}
         {isDesktop && (
-          <div className="flex-1 flex justify-center">
+          <div className="flex-1 flex justify-center items-center gap-2">
             <input
               type="text"
               value={searchQuery}
@@ -75,6 +81,15 @@ const Navbar = ({ searchQuery, setSearchQuery }) => {
                 transition-all duration-200
               "
             />
+            {showFilterButton && (
+              <button
+                onClick={onFilterToggle}
+                className="p-2 rounded-full hover:bg-gray-100 text-gray-700 hover:text-gold-700 transition-colors"
+                title="Toggle filters"
+              >
+                <FiFilter className="text-xl" />
+              </button>
+            )}
           </div>
         )}
 
@@ -185,6 +200,19 @@ const Navbar = ({ searchQuery, setSearchQuery }) => {
           focus:ring-2 focus:ring-gold-500 focus:border-gold-500 focus:outline-none transition
         "
             />
+
+            {/* Filter Button (Mobile) */}
+            {showFilterButton && (
+              <button
+                onClick={() => {
+                  setMobileSearchOpen(false);
+                  onFilterToggle();
+                }}
+                className="text-xl text-gray-700 active:scale-90 transition"
+              >
+                <FiFilter />
+              </button>
+            )}
           </div>
         </div>
       )}

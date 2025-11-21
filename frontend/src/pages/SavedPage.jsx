@@ -317,12 +317,22 @@ const SavedPage = () => {
             {/* empty state */}
             {!loading && displayed.length === 0 && (
               <div className="mt-20 text-center text-gray-500">
-                <div className="text-5xl mb-4">📁</div>
+                <div className="text-5xl mb-4">
+                  {bookmarks.length === 0 ? "📁" : "🔍"}
+                </div>
                 <h2 className="text-xl font-medium text-gray-800">
-                  No Saved Articles
+                  {bookmarks.length === 0
+                    ? "No Saved Articles"
+                    : "No Results Found"}
                 </h2>
                 <p className="text-gray-500 mt-1">
-                  Bookmark news stories and they’ll appear here.
+                  {bookmarks.length === 0
+                    ? "Bookmark news stories and they'll appear here."
+                    : search
+                    ? `No articles match "${search}". Try a different search.`
+                    : filterSource !== "all"
+                    ? `No articles from ${filterSource}. Try another filter.`
+                    : "No articles match your filters."}
                 </p>
               </div>
             )}

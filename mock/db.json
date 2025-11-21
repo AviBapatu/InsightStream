@@ -98,60 +98,6 @@
         "content": "The desperate search for a 5-year-old girl who was swept into the Pacific Ocean Friday as her father drowned attempting to save her continues while southern California braces for more heavy rainfall … [+3872 chars]"
       },
       "savedAt": "2025-11-16T18:18:09.453Z"
-    },
-    {
-      "id": "3b3d8fa6-aa68-4cf9-988f-a731f3504530",
-      "userId": "67f1912d-0d15-49d7-af99-2f3dbc9a29f9",
-      "article": {
-        "source": {
-          "id": null,
-          "name": "TMZ"
-        },
-        "author": "TMZ Staff",
-        "title": "Kim and Khloé Kardashian Hang Out with Britney Spears - TMZ",
-        "description": "Kim Kardashian just had an epic reunion with Britney Spears ... and Khloé Kardashian joined, too!",
-        "url": "https://www.tmz.com/2025/11/15/kim-khloe-kardashian-hang-out-britney-spears/",
-        "urlToImage": "https://imagez.tmz.com/image/16/16by9/2025/11/15/167932271a2043559364c90713237d40_xl.png",
-        "publishedAt": "2025-11-15T13:17:06Z",
-        "content": null
-      },
-      "savedAt": "2025-11-16T18:35:40.740Z"
-    },
-    {
-      "id": "e92489c5-0704-4c2c-b733-212fa5319658",
-      "userId": "67f1912d-0d15-49d7-af99-2f3dbc9a29f9",
-      "article": {
-        "source": {
-          "id": "nbc-news",
-          "name": "NBC News"
-        },
-        "author": "Mirna Alsharif, Steve Strouss, Erick Mendoza",
-        "title": "Search for missing 5-year-old swept into Pacific Ocean continues as southern California braces for devastating rain - NBC News",
-        "description": "The desperate search for a 5-year-old girl who was swept into the Pacific Ocean Friday as her father drowned attempting to save her continues while southern California braces for more heavy rainfall that could bring life-threatening floods to the region",
-        "url": "https://www.nbcnews.com/weather/storms/california-flooding-rain-storm-rcna244092",
-        "urlToImage": "https://media-cldnry.s-nbcnews.com/image/upload/t_nbcnews-fp-1200-630,f_auto,q_auto:best/rockcms/2025-11/251115-storm-ch-1116-3bc803.jpg",
-        "publishedAt": "2025-11-15T17:12:25Z",
-        "content": "The desperate search for a 5-year-old girl who was swept into the Pacific Ocean Friday as her father drowned attempting to save her continues while southern California braces for more heavy rainfall … [+3872 chars]"
-      },
-      "savedAt": "2025-11-16T18:39:10.609Z"
-    },
-    {
-      "id": "de3f5b7d-1d75-4899-ad8c-f1a2016a4f5c",
-      "userId": "67f1912d-0d15-49d7-af99-2f3dbc9a29f9",
-      "article": {
-        "source": {
-          "id": null,
-          "name": "BBC News"
-        },
-        "author": null,
-        "title": "Thousands march outside COP30 summit in call for action - BBC",
-        "description": "This is the first time since 2021 that protesters have been allowed to demonstrate outside the UN talks.",
-        "url": "https://www.bbc.com/news/articles/cy40z22qqwwo",
-        "urlToImage": "https://ichef.bbci.co.uk/news/1024/branded_news/5a94/live/1093fae0-c249-11f0-8669-5560f5c90fbe.jpg",
-        "publishedAt": "2025-11-15T17:09:03Z",
-        "content": "Georgina RannardClimate and science reporter, Belém, Brazil\r\nMarching to the beat of pounding sound systems, thousands of climate protesters have been bringing their message to the gates of the COP30… [+4432 chars]"
-      },
-      "savedAt": "2025-11-16T18:39:12.635Z"
     }
   ]
 }

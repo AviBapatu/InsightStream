@@ -15,38 +15,96 @@ const cache = new Map();
 
 // TTL rules (in ms)
 const TTL = {
-  homepage: 5 * 60 * 1000,      // 5 minutes
-  category: 3 * 60 * 1000,      // 3 minutes
-  search: 15 * 1000             // 15 seconds
+  homepage: 5 * 60 * 1000, // 5 minutes
+  category: 3 * 60 * 1000, // 3 minutes
+  search: 15 * 1000, // 15 seconds
 };
 
 const buildKey = (params) => JSON.stringify(params);
 
 app.get("/api/news", async (req, res) => {
   try {
-    const { q, category, page = 1, pageSize = 20, country = "us" } = req.query;
+    const {
+      // Common params
+      q,
+      page = 1,
+      pageSize = 20,
 
-    const mode = q
+      // Top Headlines params
+      country = "us",
+      category,
+
+      // Everything (search) params
+      language,
+      sortBy,
+      searchIn,
+      from,
+      to,
+      sources,
+      domains,
+      excludeDomains,
+    } = req.query;
+
+    // Determine mode: if q exists with search filters, use "everything", else "top-headlines"
+    const isSearchMode =
+      q &&
+      (language ||
+        sortBy ||
+        searchIn ||
+        from ||
+        to ||
+        sources ||
+        domains ||
+        excludeDomains);
+
+    const mode = isSearchMode
+      ? "search"
+      : q
       ? "search"
       : category
       ? "category"
       : "homepage";
 
     const endpoint =
-      q
+      isSearchMode || q
         ? "https://newsapi.org/v2/everything"
         : "https://newsapi.org/v2/top-headlines";
 
-    // Build params
-    const params = {
+    // Build params based on mode
+    let params = {
       apiKey: NEWS_API_KEY,
-      q: q || undefined,
-      category: category || undefined,
       page,
       pageSize,
-      country: q ? undefined : country,
-      sortBy: q ? "publishedAt" : undefined
     };
+
+    if (endpoint.includes("top-headlines")) {
+      // TOP HEADLINES MODE
+      params = {
+        ...params,
+        country,
+        category: category || undefined,
+        q: q || undefined,
+      };
+    } else {
+      // EVERYTHING (SEARCH) MODE
+      params = {
+        ...params,
+        q: q || undefined,
+        language: language || undefined,
+        sortBy: sortBy || "publishedAt",
+        searchIn: searchIn || undefined,
+        from: from || undefined,
+        to: to || undefined,
+        sources: sources || undefined,
+        domains: domains || undefined,
+        excludeDomains: excludeDomains || undefined,
+      };
+    }
+
+    // Remove undefined values
+    Object.keys(params).forEach((key) => {
+      if (params[key] === undefined) delete params[key];
+    });
 
     const cacheKey = buildKey(params);
     const cached = cache.get(cacheKey);
@@ -59,13 +117,12 @@ app.get("/api/news", async (req, res) => {
 
     cache.set(cacheKey, {
       data: response.data,
-      expires: Date.now() + TTL[mode]
+      expires: Date.now() + TTL[mode],
     });
 
     return res.json({ ...response.data, cached: false });
-
   } catch (err) {
-    console.error(err);
+    console.error("Proxy error:", err.response?.data || err.message);
 
     if (err.response?.status === 429) {
       const stale = [...cache.values()][0];
@@ -75,11 +132,12 @@ app.get("/api/news", async (req, res) => {
       return res.status(429).json({ error: "Rate limit exceeded" });
     }
 
-    res.status(500).json({ error: "Failed to fetch news" });
+    res.status(500).json({
+      error: "Failed to fetch news",
+      details: err.response?.data?.message || err.message,
+    });
   }
 });
 
 const PORT = 4000;
-app.listen(PORT, () =>
-  console.log(`NewsAPI proxy server is up Baby! ${PORT}`)
-);
+app.listen(PORT, () => console.log(`NewsAPI proxy server is up Baby! ${PORT}`));
