@@ -172,11 +172,17 @@ const SavedPage = () => {
         onFilterToggle={() => setShowFilter((prev) => !prev)}
       />
 
-      <main className="bg-white min-h-screen pb-12">
+      <main
+        className="min-h-screen pb-12"
+        style={{ backgroundColor: "var(--color-background)" }}
+      >
         <div className="max-w-6xl mx-auto px-4 pt-6">
           <div className="flex items-start justify-between gap-4">
             <div>
-              <h1 className="text-2xl md:text-3xl font-semibold tracking-tight text-gray-900">
+              <h1
+                className="text-2xl md:text-3xl font-semibold tracking-tight"
+                style={{ color: "var(--color-text-primary)" }}
+              >
                 Saved Articles
               </h1>
               <p className="text-gray-500 text-sm mt-1">

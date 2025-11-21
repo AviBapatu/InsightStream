@@ -20,6 +20,7 @@ import ReaderPanel from "./components/ReaderPanel";
 import { useAuthStore } from "./store/useAuthStore";
 import { useBookmarksStore } from "./store/useBookmarksStore";
 import { useGuestBookmarksStore } from "./store/useGuestBookmarksStore";
+import { useThemeStore } from "./store/useThemeStore";
 
 function useBookmarksSyncOnConnectivity() {
   const user = useAuthStore((s) => s.user);
@@ -47,6 +48,7 @@ function App() {
   const token = useAuthStore((s) => s.token);
 
   const initBookmarks = useBookmarksStore((s) => s.initForUser);
+  const initializeTheme = useThemeStore((s) => s.initializeTheme);
 
   useEffect(() => {
     validateToken();
@@ -60,6 +62,11 @@ function App() {
 
   useEffect(() => {
     useGuestBookmarksStore.getState().load();
+  }, []);
+
+  // Initialize theme on app load
+  useEffect(() => {
+    initializeTheme();
   }, []);
 
   useBookmarksSyncOnConnectivity();

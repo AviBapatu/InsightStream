@@ -1,27 +1,70 @@
 @import "tailwindcss";
 
+/* Default theme colors - will be overridden by JavaScript */
+:root {
+  /* Primary colors */
+  --color-primary-50: #fdf7e8;
+  --color-primary-100: #f7eac4;
+  --color-primary-200: #f1dd9f;
+  --color-primary-300: #ebcf7a;
+  --color-primary-400: #e5c356;
+  --color-primary-500: #d9a63a;
+  --color-primary-600: #b7892e;
+  --color-primary-700: #926b23;
+  --color-primary-800: #6e4e17;
+  --color-primary-900: #48320c;
+
+  /* Accent colors */
+  --color-accent: #d9a63a;
+  --color-accent-hover: #b7892e;
+
+  /* Background colors */
+  --color-background: #ffffff;
+  --color-background-secondary: #f9fafb;
+  --color-background-tertiary: #f3f4f6;
+
+  /* Text colors */
+  --color-text-primary: #111827;
+  --color-text-secondary: #6b7280;
+  --color-text-tertiary: #9ca3af;
+
+  /* Border colors */
+  --color-border: #e5e7eb;
+  --color-border-hover: #d1d5db;
+
+  /* Status colors */
+  --color-success: #10b981;
+  --color-error: #ef4444;
+  --color-warning: #f59e0b;
+  --color-info: #3b82f6;
+}
+
 @theme {
-  --color-gold-50: #fdf7e8;
-  --color-gold-100: #f7eac4;
-  --color-gold-200: #f1dd9f;
-  --color-gold-300: #ebcf7a;
-  --color-gold-400: #e5c356;
-  --color-gold-500: #d9a63a;
-  --color-gold-600: #b7892e;
-  --color-gold-700: #926b23;
-  --color-gold-800: #6e4e17;
-  --color-gold-900: #48320c;
+  /* Map CSS variables to Tailwind theme colors */
+  --color-gold-50: var(--color-primary-50);
+  --color-gold-100: var(--color-primary-100);
+  --color-gold-200: var(--color-primary-200);
+  --color-gold-300: var(--color-primary-300);
+  --color-gold-400: var(--color-primary-400);
+  --color-gold-500: var(--color-primary-500);
+  --color-gold-600: var(--color-primary-600);
+  --color-gold-700: var(--color-primary-700);
+  --color-gold-800: var(--color-primary-800);
+  --color-gold-900: var(--color-primary-900);
 }
 
 @layer components {
   .input-style {
     @apply w-full rounded-lg px-3 py-2.5
-         bg-white text-[15px] text-gray-800
-         border border-gray-300
+         text-[15px]
+         border
          transition-all duration-200 ease-out
          placeholder:text-gray-400
          focus:outline-none 
          focus:ring-2 focus:ring-gold-500 focus:border-transparent;
+    background-color: var(--color-background);
+    color: var(--color-text-primary);
+    border-color: var(--color-border);
   }
 
   .btn-style {
@@ -36,16 +79,20 @@
 
 @layer components {
   .auth-card {
-    @apply w-full max-w-md bg-white border border-gray-200 shadow-sm 
+    @apply w-full max-w-md shadow-sm 
            rounded-xl p-8 md:p-12 relative z-10;
+    background-color: var(--color-background);
+    border: 1px solid var(--color-border);
   }
 
   .title-auth {
     @apply text-2xl md:text-3xl font-semibold tracking-tight mb-2;
+    color: var(--color-text-primary);
   }
 
   .subtitle-auth {
-    @apply text-sm md:text-base text-gray-600 leading-relaxed mb-7;
+    @apply text-sm md:text-base leading-relaxed mb-7;
+    color: var(--color-text-secondary);
   }
 
   .form-section {
@@ -53,7 +100,8 @@
   }
 
   .bottom-link {
-    @apply text-sm text-gray-600 mt-10 text-center;
+    @apply text-sm mt-10 text-center;
+    color: var(--color-text-secondary);
   }
 
   .scrollbar-hide::-webkit-scrollbar {
@@ -131,6 +179,16 @@ html {
 body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: var(--color-background);
+  color: var(--color-text-primary);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Apply theme colors to common elements */
+#root {
+  background-color: var(--color-background);
+  color: var(--color-text-primary);
+  min-height: 100vh;
 }
 
 /* Smooth transitions for aspect ratios */
@@ -142,4 +200,108 @@ body {
 ::selection {
   background-color: rgba(183, 137, 46, 0.2);
   color: inherit;
+}
+
+/* Theme-aware utility classes */
+.bg-theme {
+  background-color: var(--color-background) !important;
+}
+
+.bg-theme-secondary {
+  background-color: var(--color-background-secondary) !important;
+}
+
+.bg-theme-tertiary {
+  background-color: var(--color-background-tertiary) !important;
+}
+
+.text-theme-primary {
+  color: var(--color-text-primary) !important;
+}
+
+.text-theme-secondary {
+  color: var(--color-text-secondary) !important;
+}
+
+.text-theme-tertiary {
+  color: var(--color-text-tertiary) !important;
+}
+
+.border-theme {
+  border-color: var(--color-border) !important;
+}
+
+.border-theme-hover:hover {
+  border-color: var(--color-border-hover) !important;
+}
+
+/* Card styles that work with theme */
+.card-theme {
+  background-color: var(--color-background-secondary) !important;
+  border: 1px solid var(--color-border);
+  color: var(--color-text-primary);
+}
+
+.card-theme-elevated {
+  background-color: var(--color-background-tertiary) !important;
+  border: 1px solid var(--color-border);
+  color: var(--color-text-primary);
+}
+
+/* Ensure white backgrounds in cards still show content */
+.bg-white {
+  background-color: var(--color-background-secondary);
+  color: var(--color-text-primary);
+}
+
+/* Gray backgrounds adapt to theme */
+.bg-gray-50 {
+  background-color: var(--color-background-secondary);
+}
+
+.bg-gray-100 {
+  background-color: var(--color-background-tertiary);
+}
+
+.bg-gray-200 {
+  background-color: var(--color-border-hover);
+}
+
+/* Text colors adapt to theme */
+.text-gray-900 {
+  color: var(--color-text-primary);
+}
+
+.text-gray-800 {
+  color: var(--color-text-primary);
+}
+
+.text-gray-700 {
+  color: var(--color-text-secondary);
+}
+
+.text-gray-600 {
+  color: var(--color-text-secondary);
+}
+
+.text-gray-500 {
+  color: var(--color-text-tertiary);
+}
+
+/* Border colors adapt to theme */
+.border-gray-200 {
+  border-color: var(--color-border);
+}
+
+.border-gray-300 {
+  border-color: var(--color-border-hover);
+}
+
+/* Hover states for theme-aware backgrounds */
+.hover\:bg-gray-50:hover {
+  background-color: var(--color-background-tertiary);
+}
+
+.hover\:bg-gray-100:hover {
+  background-color: var(--color-border);
 }

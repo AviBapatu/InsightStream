@@ -235,7 +235,12 @@ const ReaderPanel = () => {
 
               {/* Hero Image */}
               {article.urlToImage ? (
-                <div className="relative aspect-video w-full bg-gray-100 overflow-hidden">
+                <div
+                  className="relative aspect-video w-full overflow-hidden"
+                  style={{
+                    backgroundColor: "var(--color-background-secondary)",
+                  }}
+                >
                   <motion.img
                     src={article.urlToImage}
                     alt={article.title}
@@ -251,24 +256,41 @@ const ReaderPanel = () => {
                   />
                   {!imageLoaded && (
                     <div className="absolute inset-0 flex items-center justify-center">
-                      <IoImageOutline className="w-16 h-16 text-gray-300" />
+                      <IoImageOutline
+                        className="w-16 h-16"
+                        style={{ color: "var(--color-border-secondary)" }}
+                      />
                     </div>
                   )}
                 </div>
               ) : (
-                <div className="aspect-video w-full bg-gray-100 flex items-center justify-center">
-                  <IoImageOutline className="w-16 h-16 text-gray-300" />
+                <div
+                  className="aspect-video w-full flex items-center justify-center"
+                  style={{
+                    backgroundColor: "var(--color-background-secondary)",
+                  }}
+                >
+                  <IoImageOutline
+                    className="w-16 h-16"
+                    style={{ color: "var(--color-border-secondary)" }}
+                  />
                 </div>
               )}
 
               {/* Article Title Block */}
               <div className="px-6 py-5 space-y-2">
-                <h1 className="text-2xl font-bold leading-tight text-gray-900 line-clamp-4">
+                <h1
+                  className="text-2xl font-bold leading-tight line-clamp-4"
+                  style={{ color: "var(--color-text-primary)" }}
+                >
                   {article.title}
                 </h1>
 
                 {/* Metadata */}
-                <div className="flex items-center gap-2 text-sm text-gray-500">
+                <div
+                  className="flex items-center gap-2 text-sm"
+                  style={{ color: "var(--color-text-tertiary)" }}
+                >
                   {article.author && (
                     <>
                       <span className="truncate max-w-[150px]">
@@ -293,14 +315,20 @@ const ReaderPanel = () => {
               <div className="px-6 py-4 space-y-4">
                 {/* First paragraph - slightly larger */}
                 {article.description && (
-                  <p className="text-lg font-medium leading-[1.65] text-gray-800 first-letter:text-2xl first-letter:font-semibold">
+                  <p
+                    className="text-lg font-medium leading-[1.65] first-letter:text-2xl first-letter:font-semibold"
+                    style={{ color: "var(--color-text-primary)" }}
+                  >
                     {article.description}
                   </p>
                 )}
 
                 {/* Additional content */}
                 {article.content && article.content !== article.description && (
-                  <div className="space-y-4 text-base leading-[1.65] text-gray-800">
+                  <div
+                    className="space-y-4 text-base leading-[1.65]"
+                    style={{ color: "var(--color-text-primary)" }}
+                  >
                     {article.content.split("\n\n").map((paragraph, idx) => (
                       <p key={idx}>{paragraph}</p>
                     ))}
@@ -309,7 +337,10 @@ const ReaderPanel = () => {
 
                 {/* Read full article notice */}
                 <div className="pt-4 pb-2">
-                  <p className="text-sm text-gray-500 italic">
+                  <p
+                    className="text-sm italic"
+                    style={{ color: "var(--color-text-tertiary)" }}
+                  >
                     This is a preview. Visit the source to read the full
                     article.
                   </p>
@@ -317,7 +348,10 @@ const ReaderPanel = () => {
               </div>
 
               {/* Action Bar */}
-              <div className="px-6 py-6 space-y-3 border-t border-gray-100">
+              <div
+                className="px-6 py-6 space-y-3 border-t"
+                style={{ borderColor: "var(--color-border)" }}
+              >
                 {/* Primary Actions */}
                 <div className="flex gap-3">
                   <button
@@ -325,12 +359,20 @@ const ReaderPanel = () => {
                     className="
                       flex-1 flex items-center justify-center gap-2
                       px-4 py-2.5 rounded-xl
-                      bg-gold-600 hover:bg-gold-700
                       text-white font-medium text-sm
                       transition-all duration-200
                       active:scale-[0.98]
                       shadow-sm hover:shadow-md
                     "
+                    style={{ backgroundColor: "var(--color-primary-600)" }}
+                    onMouseEnter={(e) =>
+                      (e.currentTarget.style.backgroundColor =
+                        "var(--color-primary-700)")
+                    }
+                    onMouseLeave={(e) =>
+                      (e.currentTarget.style.backgroundColor =
+                        "var(--color-primary-600)")
+                    }
                   >
                     <IoOpenOutline className="w-5 h-5" />
                     <span>Open in Browser</span>
@@ -341,11 +383,24 @@ const ReaderPanel = () => {
                     className="
                       flex items-center justify-center
                       w-11 h-11 rounded-xl
-                      bg-gray-100 hover:bg-gray-200
-                      text-gray-700 hover:text-gray-900
                       transition-all duration-200
                       active:scale-95
                     "
+                    style={{
+                      backgroundColor: "var(--color-background-secondary)",
+                      color: "var(--color-text-secondary)",
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.backgroundColor =
+                        "var(--color-background-tertiary)";
+                      e.currentTarget.style.color = "var(--color-text-primary)";
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.backgroundColor =
+                        "var(--color-background-secondary)";
+                      e.currentTarget.style.color =
+                        "var(--color-text-secondary)";
+                    }}
                     aria-label="Share article"
                   >
                     <IoShareSocialOutline className="w-5 h-5" />

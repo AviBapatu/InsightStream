@@ -8,6 +8,7 @@ import { IoSearchOutline } from "react-icons/io5";
 import { FiFilter, FiUser, FiLogOut } from "react-icons/fi";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import { motion, AnimatePresence } from "framer-motion";
+import DraggableBottomSheet from "./modals/DraggableBottomSheet";
 
 const Navbar = ({
   searchQuery,
@@ -80,14 +81,23 @@ const Navbar = ({
 
   return (
     <>
-      <header className="w-full bg-white/95 border-b border-gray-100 z-40 sticky top-0 backdrop-blur-sm">
+      <header
+        className="w-full border-b z-40 sticky top-0 backdrop-blur-sm"
+        style={{
+          backgroundColor: "var(--color-background)",
+          borderColor: "var(--color-border)",
+        }}
+      >
         <div className="max-w-6xl mx-auto flex items-center justify-between h-16 px-4">
           {/* LEFT — LOGO */}
           <div
             className="flex items-center space-x-2 cursor-pointer"
             onClick={() => navigate("/home")}
           >
-            <span className="font-semibold text-xl tracking-tight">
+            <span
+              className="font-semibold text-xl tracking-tight"
+              style={{ color: "var(--color-text-primary)" }}
+            >
               InsightStream
             </span>
           </div>
@@ -103,29 +113,38 @@ const Navbar = ({
                   placeholder="Search news..."
                   className="
                   w-full px-5 py-2.5 rounded-full
-                  border border-gray-200
-                  bg-gray-50/50
+                  border
                   text-sm
                   focus:ring-2 focus:ring-gold-500 focus:border-gold-500 focus:outline-none
-                  focus:bg-white
                   transition-all duration-200
                   placeholder:text-gray-400
                 "
+                  style={{
+                    backgroundColor: "var(--color-background-secondary)",
+                    color: "var(--color-text-primary)",
+                    borderColor: "var(--color-border)",
+                  }}
                 />
-                <IoSearchOutline className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 text-lg pointer-events-none" />
+                <IoSearchOutline
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-lg pointer-events-none"
+                  style={{ color: "var(--color-text-tertiary)" }}
+                />
               </div>
               {showFilterButton && (
                 <button
                   onClick={onFilterToggle}
                   className="
                   p-2.5 rounded-full 
-                  border border-gray-200
-                  bg-gray-50/50
-                  hover:bg-gray-100 
-                  text-gray-700 hover:text-gold-700 
+                  border
+                  hover:bg-opacity-80
                   transition-all duration-200
                   active:scale-95
                 "
+                  style={{
+                    backgroundColor: "var(--color-background-secondary)",
+                    borderColor: "var(--color-border)",
+                    color: "var(--color-text-secondary)",
+                  }}
                   title="Toggle filters"
                 >
                   <FiFilter className="text-lg" />
@@ -140,7 +159,8 @@ const Navbar = ({
             {!isDesktop && (
               <button
                 onClick={() => setMobileSearchOpen(true)}
-                className="text-xl text-gray-700 active:scale-90 transition"
+                className="text-xl active:scale-90 transition"
+                style={{ color: "var(--color-text-secondary)" }}
               >
                 <IoSearchOutline />
               </button>
@@ -152,13 +172,16 @@ const Navbar = ({
                 onClick={goSaved}
                 className="
                   p-2.5 rounded-full 
-                  border border-gray-200
-                  bg-gray-50/50
-                  hover:bg-gray-100 
-                  text-gray-700 hover:text-gold-700 
+                  border
+                  hover:bg-opacity-80
                   transition-all duration-200
                   active:scale-95
                 "
+                style={{
+                  backgroundColor: "var(--color-background-secondary)",
+                  borderColor: "var(--color-border)",
+                  color: "var(--color-text-secondary)",
+                }}
                 title="Saved articles"
               >
                 <LuFolderHeart className="text-lg" />
@@ -176,7 +199,12 @@ const Navbar = ({
                   }
                   setMenuOpen((p) => !p);
                 }}
-                className="w-9 h-9 rounded-full overflow-hidden border border-gray-300 hover:ring-1 hover:ring-gold-500/30 transition-all focus:outline-none focus:ring-2 focus:ring-gold-500/40"
+                className="w-9 h-9 rounded-full overflow-hidden border hover:ring-1 transition-all focus:outline-none focus:ring-2"
+                style={{
+                  borderColor: "var(--color-border)",
+                  "--tw-ring-color": "var(--color-primary-500)",
+                  "--tw-ring-opacity": "0.3",
+                }}
                 aria-expanded={menuOpen}
                 aria-haspopup="menu"
                 aria-controls="profile-menu"
@@ -204,17 +232,25 @@ const Navbar = ({
                       ease: [0.16, 0.84, 0.24, 1],
                     }}
                     className="
-                    absolute right-0 mt-1 w-56 bg-white 
-                    border border-gray-100 rounded-2xl shadow-lg 
+                    absolute right-0 mt-1 w-56
+                    border rounded-2xl shadow-lg 
                     z-50 p-2
                   "
                     style={{
+                      backgroundColor: "var(--color-background)",
+                      borderColor: "var(--color-border)",
                       boxShadow: "0 8px 18px rgba(19, 19, 24, 0.06)",
                     }}
                   >
                     {/* Identity Block */}
                     <div className="flex items-center gap-3 px-3 py-2 mb-1">
-                      <div className="w-9 h-9 rounded-full overflow-hidden ring-1 ring-gold-500/30">
+                      <div
+                        className="w-9 h-9 rounded-full overflow-hidden ring-1"
+                        style={{
+                          "--tw-ring-color": "var(--color-primary-500)",
+                          "--tw-ring-opacity": "0.3",
+                        }}
+                      >
                         <img
                           src={
                             user?.avatar
@@ -226,10 +262,16 @@ const Navbar = ({
                         />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <div className="text-sm font-medium text-gray-900 truncate">
+                        <div
+                          className="text-sm font-medium truncate"
+                          style={{ color: "var(--color-text-primary)" }}
+                        >
                           {user?.name || "User"}
                         </div>
-                        <div className="text-xs text-gray-500 truncate">
+                        <div
+                          className="text-xs truncate"
+                          style={{ color: "var(--color-text-tertiary)" }}
+                        >
                           {user?.email || "email@example.com"}
                         </div>
                       </div>
@@ -241,21 +283,38 @@ const Navbar = ({
                       onClick={goSaved}
                       className="
                       w-full flex items-center gap-3 px-3 py-2 rounded-lg 
-                      text-sm font-medium text-gray-800 
-                      hover:bg-gold-50 hover:text-gold-700 
+                      text-sm font-medium
+                      hover:bg-opacity-80
                       transition-all duration-120
                       active:scale-[0.995]
-                      focus:outline-none focus:ring-2 focus:ring-gold-500/20
+                      focus:outline-none focus:ring-2
                       relative group
                     "
+                      style={{
+                        color: "var(--color-text-primary)",
+                        "--hover-bg": "var(--color-background-secondary)",
+                      }}
+                      onMouseEnter={(e) =>
+                        (e.currentTarget.style.backgroundColor =
+                          "var(--color-background-secondary)")
+                      }
+                      onMouseLeave={(e) =>
+                        (e.currentTarget.style.backgroundColor = "transparent")
+                      }
                     >
                       {hasSavedArticles ? (
-                        <AiFillHeart className="text-lg text-gold-500" />
+                        <AiFillHeart
+                          className="text-lg"
+                          style={{ color: "var(--color-primary-500)" }}
+                        />
                       ) : (
                         <AiOutlineHeart className="text-lg" />
                       )}
                       <span>Saved</span>
-                      <div className="absolute left-0 top-0 bottom-0 w-[3px] bg-gold-500 rounded-r opacity-0 group-hover:opacity-100 transition-opacity" />
+                      <div
+                        className="absolute left-0 top-0 bottom-0 w-[3px] rounded-r opacity-0 group-hover:opacity-100 transition-opacity"
+                        style={{ backgroundColor: "var(--color-primary-500)" }}
+                      />
                     </button>
 
                     <button
@@ -263,21 +322,37 @@ const Navbar = ({
                       onClick={goProfile}
                       className="
                       w-full flex items-center gap-3 px-3 py-2 rounded-lg 
-                      text-sm font-medium text-gray-800 
-                      hover:bg-gold-50 hover:text-gold-700 
+                      text-sm font-medium
+                      hover:bg-opacity-80
                       transition-all duration-120
                       active:scale-[0.995]
-                      focus:outline-none focus:ring-2 focus:ring-gold-500/20
+                      focus:outline-none focus:ring-2
                       relative group
                     "
+                      style={{
+                        color: "var(--color-text-primary)",
+                      }}
+                      onMouseEnter={(e) =>
+                        (e.currentTarget.style.backgroundColor =
+                          "var(--color-background-secondary)")
+                      }
+                      onMouseLeave={(e) =>
+                        (e.currentTarget.style.backgroundColor = "transparent")
+                      }
                     >
                       <FiUser className="text-lg" />
                       <span>Account</span>
-                      <div className="absolute left-0 top-0 bottom-0 w-[3px] bg-gold-500 rounded-r opacity-0 group-hover:opacity-100 transition-opacity" />
+                      <div
+                        className="absolute left-0 top-0 bottom-0 w-[3px] rounded-r opacity-0 group-hover:opacity-100 transition-opacity"
+                        style={{ backgroundColor: "var(--color-primary-500)" }}
+                      />
                     </button>
 
                     {/* Separator */}
-                    <div className="h-px bg-gray-100 my-2" />
+                    <div
+                      className="h-px my-2"
+                      style={{ backgroundColor: "var(--color-border)" }}
+                    />
 
                     {/* Logout */}
                     <button
@@ -303,103 +378,93 @@ const Navbar = ({
         </div>
       </header>
 
-      {/* MOBILE SEARCH PANEL — SLIDE FROM BOTTOM */}
-      <AnimatePresence>
-        {!isDesktop && mobileSearchOpen && (
-          <>
-            {/* Backdrop */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.2 }}
-              className="fixed inset-0 bg-black/40 backdrop-blur-sm z-9998"
-              onClick={() => setMobileSearchOpen(false)}
-            />
+      {/* MOBILE SEARCH PANEL — DRAGGABLE */}
+      {!isDesktop && (
+        <DraggableBottomSheet
+          isOpen={mobileSearchOpen}
+          onClose={() => setMobileSearchOpen(false)}
+          maxHeight="auto"
+        >
+          <div className="space-y-4">
+            {/* Search Input */}
+            <div className="relative">
+              <input
+                type="text"
+                autoFocus={mobileSearchOpen}
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    setMobileSearchOpen(false);
+                  }
+                }}
+                placeholder="Search news..."
+                className="
+                  w-full px-5 py-4 rounded-2xl 
+                  border-2
+                  focus:ring-0 focus:outline-none 
+                  transition-all duration-200
+                  text-base
+                  touch-manipulation
+                "
+                style={{
+                  backgroundColor: "var(--color-background)",
+                  borderColor: "var(--color-border)",
+                  color: "var(--color-text-primary)",
+                }}
+              />
+              <IoSearchOutline
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-xl pointer-events-none"
+                style={{ color: "var(--color-text-tertiary)" }}
+              />
+            </div>
 
-            {/* Search Panel */}
-            <motion.div
-              initial={{ translateY: "100%", opacity: 0 }}
-              animate={{ translateY: 0, opacity: 1 }}
-              exit={{ translateY: "100%", opacity: 0 }}
-              transition={{
-                duration: 0.25,
-                ease: "easeOut",
-              }}
-              className="
-                fixed bottom-0 left-0 right-0 
-                bg-white rounded-t-3xl 
-                border-t border-gray-200
-                shadow-2xl 
-                z-9999
-                p-6 pb-8
-              "
-            >
-              {/* Handle */}
-              <div className="w-12 h-1.5 bg-gray-300 rounded-full mx-auto mb-6" />
-
-              <div className="space-y-4">
-                {/* Search Input */}
-                <div className="relative">
-                  <input
-                    type="text"
-                    autoFocus={mobileSearchOpen}
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="Search news..."
-                    className="
-                      w-full px-5 py-3.5 rounded-2xl 
-                      border-2 border-gray-200 
-                      focus:ring-0 focus:border-gold-500 focus:outline-none 
-                      transition-all duration-200
-                      text-base
-                      placeholder:text-gray-400
-                    "
-                  />
-                  <IoSearchOutline className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 text-xl pointer-events-none" />
-                </div>
-
-                {/* Action Buttons */}
-                <div className="flex gap-3">
-                  {showFilterButton && (
-                    <button
-                      onClick={() => {
-                        setMobileSearchOpen(false);
-                        onFilterToggle();
-                      }}
-                      className="
-                        flex-1 flex items-center justify-center gap-2
-                        px-4 py-3 rounded-xl
-                        border border-gray-200
-                        bg-gray-50
-                        text-gray-700 font-medium
-                        active:bg-gray-100
-                        transition-all duration-200
-                        active:scale-95
-                      "
-                    >
-                      <FiFilter className="text-lg" />
-                      <span>Filters</span>
-                    </button>
-                  )}
-                  <button
-                    onClick={() => setMobileSearchOpen(false)}
-                    className="
-                      flex-1 px-6 py-3 rounded-xl
-                      bg-gold-600 text-white font-medium
-                      hover:bg-gold-700
-                      active:scale-95
-                      transition-all duration-200
-                    "
-                  >
-                    Search
-                  </button>
-                </div>
-              </div>
-            </motion.div>
-          </>
-        )}
-      </AnimatePresence>
+            {/* Action Buttons */}
+            <div className="flex gap-3">
+              {showFilterButton && (
+                <button
+                  onClick={() => {
+                    setMobileSearchOpen(false);
+                    onFilterToggle();
+                  }}
+                  className="
+                    flex-1 flex items-center justify-center gap-2
+                    px-4 py-3.5 rounded-xl
+                    border font-medium
+                    transition-all duration-200
+                    active:scale-95
+                    touch-manipulation
+                  "
+                  style={{
+                    backgroundColor: "var(--color-background-secondary)",
+                    borderColor: "var(--color-border)",
+                    color: "var(--color-text-primary)",
+                  }}
+                >
+                  <FiFilter className="text-lg" />
+                  <span>Filters</span>
+                </button>
+              )}
+              <button
+                onClick={() => setMobileSearchOpen(false)}
+                className="
+                  flex-1 px-6 py-3.5 rounded-xl
+                  font-medium
+                  active:scale-95
+                  transition-all duration-200
+                  touch-manipulation
+                "
+                style={{
+                  backgroundColor: "var(--color-primary-600)",
+                  color: "white",
+                }}
+              >
+                Search
+              </button>
+            </div>
+          </div>
+        </DraggableBottomSheet>
+      )}
 
       {/* MOBILE BOTTOM SHEET MENU */}
       <AnimatePresence>
@@ -419,7 +484,8 @@ const Navbar = ({
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: dragProgress }}
-              className="fixed inset-0 bg-white z-9999 pointer-events-none"
+              className="fixed inset-0 z-9999 pointer-events-none"
+              style={{ backgroundColor: "var(--color-background)" }}
             />
 
             {/* Bottom Sheet */}
@@ -459,20 +525,31 @@ const Navbar = ({
               }}
               className="
                 mobile-bottom-menu fixed bottom-0 left-0 right-0 
-                bg-white rounded-t-3xl border-t border-gray-100 shadow-xl 
+                rounded-t-3xl border-t shadow-xl 
                 max-h-[70vh] overflow-y-auto z-10000
                 pt-3 pb-safe px-4 touch-none
               "
               style={{
+                backgroundColor: "var(--color-background)",
+                borderColor: "var(--color-border)",
                 boxShadow: "0 8px 18px rgba(19, 19, 24, 0.06)",
               }}
             >
               {/* Handle - Make it more prominent for dragging */}
-              <div className="w-10 h-1.5 bg-gray-300 rounded-full mx-auto mb-3 cursor-grab active:cursor-grabbing" />
+              <div
+                className="w-10 h-1.5 rounded-full mx-auto mb-3 cursor-grab active:cursor-grabbing"
+                style={{ backgroundColor: "var(--color-border-secondary)" }}
+              />
 
               {/* Identity Block */}
               <div className="flex items-center gap-4 px-3 py-2 mb-4 pointer-events-none">
-                <div className="w-12 h-12 rounded-full overflow-hidden ring-1 ring-gold-500/30">
+                <div
+                  className="w-12 h-12 rounded-full overflow-hidden ring-1"
+                  style={{
+                    "--tw-ring-color": "var(--color-primary-500)",
+                    "--tw-ring-opacity": "0.3",
+                  }}
+                >
                   <img
                     src={
                       user?.avatar
@@ -484,10 +561,16 @@ const Navbar = ({
                   />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <div className="text-base font-medium text-gray-900 truncate">
+                  <div
+                    className="text-base font-medium truncate"
+                    style={{ color: "var(--color-text-primary)" }}
+                  >
                     {user?.name || "User"}
                   </div>
-                  <div className="text-xs text-gray-500 truncate">
+                  <div
+                    className="text-xs truncate"
+                    style={{ color: "var(--color-text-tertiary)" }}
+                  >
                     {user?.email || "email@example.com"}
                   </div>
                 </div>
@@ -499,13 +582,25 @@ const Navbar = ({
                   onClick={goSaved}
                   className="
                     w-full flex items-center gap-3 px-4 py-3 rounded-lg 
-                    text-base font-medium text-gray-800 
-                    hover:bg-gold-50 active:bg-gold-50 
+                    text-base font-medium
                     transition-all active:scale-95
                   "
+                  style={{
+                    color: "var(--color-text-primary)",
+                  }}
+                  onTouchStart={(e) =>
+                    (e.currentTarget.style.backgroundColor =
+                      "var(--color-background-secondary)")
+                  }
+                  onTouchEnd={(e) =>
+                    (e.currentTarget.style.backgroundColor = "transparent")
+                  }
                 >
                   {hasSavedArticles ? (
-                    <AiFillHeart className="text-xl text-gold-500" />
+                    <AiFillHeart
+                      className="text-xl"
+                      style={{ color: "var(--color-primary-500)" }}
+                    />
                   ) : (
                     <AiOutlineHeart className="text-xl" />
                   )}
@@ -516,10 +611,19 @@ const Navbar = ({
                   onClick={goProfile}
                   className="
                     w-full flex items-center gap-3 px-4 py-3 rounded-lg 
-                    text-base font-medium text-gray-800 
-                    hover:bg-gold-50 active:bg-gold-50 
+                    text-base font-medium
                     transition-all active:scale-95
                   "
+                  style={{
+                    color: "var(--color-text-primary)",
+                  }}
+                  onTouchStart={(e) =>
+                    (e.currentTarget.style.backgroundColor =
+                      "var(--color-background-secondary)")
+                  }
+                  onTouchEnd={(e) =>
+                    (e.currentTarget.style.backgroundColor = "transparent")
+                  }
                 >
                   <FiUser className="text-xl" />
                   <span>Account</span>
@@ -527,7 +631,10 @@ const Navbar = ({
               </div>
 
               {/* Separator */}
-              <div className="h-px bg-gray-100 my-3 pointer-events-none" />
+              <div
+                className="h-px my-3 pointer-events-none"
+                style={{ backgroundColor: "var(--color-border)" }}
+              />
 
               {/* Logout */}
               <button

@@ -12,7 +12,7 @@ const categories = [
 
 const CategoryBar = ({ activeCategory, setActiveCategory }) => {
   return (
-    <div className="w-full bg-white border-b border-gray-100">
+    <div className="w-full border-b" style={{ backgroundColor: "var(--color-card)", borderColor: "var(--color-border)" }}>
       <div className="max-w-6xl mx-auto px-4">
         {/* Scrollable Row */}
         <div className="flex gap-2 md:gap-4 lg:gap-6 overflow-x-auto scrollbar-hide h-14 items-center lg:justify-center">
@@ -25,9 +25,33 @@ const CategoryBar = ({ activeCategory, setActiveCategory }) => {
                 onClick={() => setActiveCategory(cat)}
                 className={
                   isActive
-                    ? "px-5 py-2 bg-gold-50 text-gold-700 font-medium rounded-full border border-gold-200 transition-all duration-200 ease-out active:scale-95 whitespace-nowrap text-sm"
-                    : "px-5 py-2 text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-full transition-all duration-200 whitespace-nowrap text-sm font-medium"
+                    ? "px-5 py-2 font-medium rounded-full border transition-all duration-200 ease-out active:scale-95 whitespace-nowrap text-sm"
+                    : "px-5 py-2 rounded-full transition-all duration-200 whitespace-nowrap text-sm font-medium"
                 }
+                style={
+                  isActive
+                    ? {
+                        backgroundColor: "var(--color-primary-50)",
+                        color: "var(--color-primary-700)",
+                        borderColor: "var(--color-primary-200)"
+                      }
+                    : {
+                        color: "var(--color-text-secondary)",
+                        backgroundColor: "transparent"
+                      }
+                }
+                onMouseEnter={(e) => {
+                  if (!isActive) {
+                    e.currentTarget.style.color = "var(--color-text-primary)";
+                    e.currentTarget.style.backgroundColor = "var(--color-background-secondary)";
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (!isActive) {
+                    e.currentTarget.style.color = "var(--color-text-secondary)";
+                    e.currentTarget.style.backgroundColor = "transparent";
+                  }
+                }}
               >
                 {cat}
               </button>
