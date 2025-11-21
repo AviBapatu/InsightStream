@@ -4,7 +4,7 @@ import CategoryBar from "../components/CategoryBar";
 import FilterBar from "../components/FilterBar";
 import HeroArticle from "../components/HeroArticle";
 import HighlightsScroller from "../components/HighlightsScroller";
-import PremiumMagazineGrid from "../components/PremiumMagazineGrid";
+import MagazineGrid from "../components/MagazineGrid";
 import { fetchNews } from "../api/news";
 import { useReaderStore } from "../store/useReaderStore";
 import { useDebounce } from "../hooks/useDebounce";
@@ -157,6 +157,7 @@ const Home = () => {
         onFilterChange={setFilters}
         isSearchMode={isSearchMode}
         isOpen={showFilters}
+        onClose={() => setShowFilters(false)}
       />
 
       {/* Hero Article Section */}
@@ -167,13 +168,13 @@ const Home = () => {
         <HighlightsScroller articles={highlightArticles} />
       )}
 
-      {/* Premium Magazine Grid */}
+      {/* Magazine Grid */}
       {gridArticles.length > 0 && (
-        <PremiumMagazineGrid articles={gridArticles} loading={false} />
+        <MagazineGrid articles={gridArticles} loading={false} />
       )}
 
       {/* Loading State */}
-      {loading && <PremiumMagazineGrid articles={[]} loading={true} />}
+      {loading && <MagazineGrid articles={[]} loading={true} />}
 
       {/* No articles found */}
       {!loading && articles.length === 0 && (

@@ -78,28 +78,29 @@ const Navbar = ({
   }, [menuOpen]);
 
   return (
-    <header className="w-full bg-white/95 border-b border-gray-100 z-40 sticky top-0 backdrop-blur-sm">
-      <div className="max-w-6xl mx-auto flex items-center justify-between h-16 px-4">
-        {/* LEFT — LOGO */}
-        <div
-          className="flex items-center space-x-2 cursor-pointer"
-          onClick={() => navigate("/home")}
-        >
-          <span className="font-semibold text-xl tracking-tight">
-            InsightStream
-          </span>
-        </div>
+    <>
+      <header className="w-full bg-white/95 border-b border-gray-100 z-40 sticky top-0 backdrop-blur-sm">
+        <div className="max-w-6xl mx-auto flex items-center justify-between h-16 px-4">
+          {/* LEFT — LOGO */}
+          <div
+            className="flex items-center space-x-2 cursor-pointer"
+            onClick={() => navigate("/home")}
+          >
+            <span className="font-semibold text-xl tracking-tight">
+              InsightStream
+            </span>
+          </div>
 
-        {/* MIDDLE — DESKTOP SEARCH BAR */}
-        {isDesktop && (
-          <div className="flex-1 flex justify-center items-center gap-2 max-w-2xl mx-8">
-            <div className="relative flex-1">
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search news..."
-                className="
+          {/* MIDDLE — DESKTOP SEARCH BAR */}
+          {isDesktop && (
+            <div className="flex-1 flex justify-center items-center gap-2 max-w-2xl mx-8">
+              <div className="relative flex-1">
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Search news..."
+                  className="
                   w-full px-5 py-2.5 rounded-full
                   border border-gray-200
                   bg-gray-50/50
@@ -109,12 +110,45 @@ const Navbar = ({
                   transition-all duration-200
                   placeholder:text-gray-400
                 "
-              />
-              <IoSearchOutline className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 text-lg pointer-events-none" />
+                />
+                <IoSearchOutline className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 text-lg pointer-events-none" />
+              </div>
+              {showFilterButton && (
+                <button
+                  onClick={onFilterToggle}
+                  className="
+                  p-2.5 rounded-full 
+                  border border-gray-200
+                  bg-gray-50/50
+                  hover:bg-gray-100 
+                  text-gray-700 hover:text-gold-700 
+                  transition-all duration-200
+                  active:scale-95
+                "
+                  title="Toggle filters"
+                >
+                  <FiFilter className="text-lg" />
+                </button>
+              )}
             </div>
-            {showFilterButton && (
+          )}
+
+          {/* RIGHT SIDE */}
+          <div className="flex items-center space-x-4 relative">
+            {/* MOBILE SEARCH ICON (moves inside right-side container) */}
+            {!isDesktop && (
               <button
-                onClick={onFilterToggle}
+                onClick={() => setMobileSearchOpen(true)}
+                className="text-xl text-gray-700 active:scale-90 transition"
+              >
+                <IoSearchOutline />
+              </button>
+            )}
+
+            {/* DESKTOP SAVED ICON */}
+            {isDesktop && (
+              <button
+                onClick={goSaved}
                 className="
                   p-2.5 rounded-full 
                   border border-gray-200
@@ -124,111 +158,87 @@ const Navbar = ({
                   transition-all duration-200
                   active:scale-95
                 "
-                title="Toggle filters"
+                title="Saved articles"
               >
-                <FiFilter className="text-lg" />
+                <LuFolderHeart className="text-lg" />
               </button>
             )}
-          </div>
-        )}
 
-        {/* RIGHT SIDE */}
-        <div className="flex items-center space-x-4 relative">
-          {/* MOBILE SEARCH ICON (moves inside right-side container) */}
-          {!isDesktop && (
-            <button
-              onClick={() => setMobileSearchOpen(true)}
-              className="text-xl text-gray-700 active:scale-90 transition"
-            >
-              <IoSearchOutline />
-            </button>
-          )}
+            {/* PROFILE ICON */}
+            <div className="relative profile-dropdown-container">
+              <button
+                ref={avatarButtonRef}
+                onClick={() => {
+                  if (!user) {
+                    navigate("/login");
+                    return;
+                  }
+                  setMenuOpen((p) => !p);
+                }}
+                className="w-9 h-9 rounded-full overflow-hidden border border-gray-300 hover:ring-1 hover:ring-gold-500/30 transition-all focus:outline-none focus:ring-2 focus:ring-gold-500/40"
+                aria-expanded={menuOpen}
+                aria-haspopup="menu"
+                aria-controls="profile-menu"
+              >
+                <img
+                  src={
+                    user?.avatar ? `/avatars/${user.avatar}` : "/pfps/pfp1.png"
+                  }
+                  alt="profile"
+                  className="w-full h-full object-cover"
+                />
+              </button>
 
-          {/* DESKTOP SAVED ICON */}
-          {isDesktop && (
-            <button
-              onClick={goSaved}
-              className="text-gray-700 hover:text-gray-900 transition"
-            >
-              <LuFolderHeart />
-            </button>
-          )}
-
-          {/* PROFILE ICON */}
-          <div className="relative profile-dropdown-container">
-            <button
-              ref={avatarButtonRef}
-              onClick={() => {
-                if (!user) {
-                  navigate("/login");
-                  return;
-                }
-                setMenuOpen((p) => !p);
-              }}
-              className="w-9 h-9 rounded-full overflow-hidden border border-gray-300 hover:ring-1 hover:ring-gold-500/30 transition-all focus:outline-none focus:ring-2 focus:ring-gold-500/40"
-              aria-expanded={menuOpen}
-              aria-haspopup="menu"
-              aria-controls="profile-menu"
-            >
-              <img
-                src={
-                  user?.avatar ? `/avatars/${user.avatar}` : "/pfps/pfp1.png"
-                }
-                alt="profile"
-                className="w-full h-full object-cover"
-              />
-            </button>
-
-            {/* DESKTOP DROPDOWN MENU */}
-            <AnimatePresence>
-              {isDesktop && menuOpen && user && (
-                <motion.div
-                  id="profile-menu"
-                  role="menu"
-                  initial={{ opacity: 0, translateY: -6, scale: 0.99 }}
-                  animate={{ opacity: 1, translateY: 0, scale: 1 }}
-                  exit={{ opacity: 0, translateY: -6, scale: 0.99 }}
-                  transition={{
-                    duration: 0.14,
-                    ease: [0.16, 0.84, 0.24, 1],
-                  }}
-                  className="
+              {/* DESKTOP DROPDOWN MENU */}
+              <AnimatePresence>
+                {isDesktop && menuOpen && user && (
+                  <motion.div
+                    id="profile-menu"
+                    role="menu"
+                    initial={{ opacity: 0, translateY: -6, scale: 0.99 }}
+                    animate={{ opacity: 1, translateY: 0, scale: 1 }}
+                    exit={{ opacity: 0, translateY: -6, scale: 0.99 }}
+                    transition={{
+                      duration: 0.14,
+                      ease: [0.16, 0.84, 0.24, 1],
+                    }}
+                    className="
                     absolute right-0 mt-1 w-56 bg-white 
                     border border-gray-100 rounded-2xl shadow-lg 
                     z-50 p-2
                   "
-                  style={{
-                    boxShadow: "0 8px 18px rgba(19, 19, 24, 0.06)",
-                  }}
-                >
-                  {/* Identity Block */}
-                  <div className="flex items-center gap-3 px-3 py-2 mb-1">
-                    <div className="w-9 h-9 rounded-full overflow-hidden ring-1 ring-gold-500/30">
-                      <img
-                        src={
-                          user?.avatar
-                            ? `/avatars/${user.avatar}`
-                            : "/pfps/pfp1.png"
-                        }
-                        alt="profile"
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="text-sm font-medium text-gray-900 truncate">
-                        {user?.name || "User"}
+                    style={{
+                      boxShadow: "0 8px 18px rgba(19, 19, 24, 0.06)",
+                    }}
+                  >
+                    {/* Identity Block */}
+                    <div className="flex items-center gap-3 px-3 py-2 mb-1">
+                      <div className="w-9 h-9 rounded-full overflow-hidden ring-1 ring-gold-500/30">
+                        <img
+                          src={
+                            user?.avatar
+                              ? `/avatars/${user.avatar}`
+                              : "/pfps/pfp1.png"
+                          }
+                          alt="profile"
+                          className="w-full h-full object-cover"
+                        />
                       </div>
-                      <div className="text-xs text-gray-500 truncate">
-                        {user?.email || "email@example.com"}
+                      <div className="flex-1 min-w-0">
+                        <div className="text-sm font-medium text-gray-900 truncate">
+                          {user?.name || "User"}
+                        </div>
+                        <div className="text-xs text-gray-500 truncate">
+                          {user?.email || "email@example.com"}
+                        </div>
                       </div>
                     </div>
-                  </div>
 
-                  {/* Primary Actions */}
-                  <button
-                    role="menuitem"
-                    onClick={goSaved}
-                    className="
+                    {/* Primary Actions */}
+                    <button
+                      role="menuitem"
+                      onClick={goSaved}
+                      className="
                       w-full flex items-center gap-3 px-3 py-2 rounded-lg 
                       text-sm font-medium text-gray-800 
                       hover:bg-gold-50 hover:text-gold-700 
@@ -237,20 +247,20 @@ const Navbar = ({
                       focus:outline-none focus:ring-2 focus:ring-gold-500/20
                       relative group
                     "
-                  >
-                    {hasSavedArticles ? (
-                      <AiFillHeart className="text-lg text-gold-500" />
-                    ) : (
-                      <AiOutlineHeart className="text-lg" />
-                    )}
-                    <span>Saved</span>
-                    <div className="absolute left-0 top-0 bottom-0 w-[3px] bg-gold-500 rounded-r opacity-0 group-hover:opacity-100 transition-opacity" />
-                  </button>
+                    >
+                      {hasSavedArticles ? (
+                        <AiFillHeart className="text-lg text-gold-500" />
+                      ) : (
+                        <AiOutlineHeart className="text-lg" />
+                      )}
+                      <span>Saved</span>
+                      <div className="absolute left-0 top-0 bottom-0 w-[3px] bg-gold-500 rounded-r opacity-0 group-hover:opacity-100 transition-opacity" />
+                    </button>
 
-                  <button
-                    role="menuitem"
-                    onClick={goProfile}
-                    className="
+                    <button
+                      role="menuitem"
+                      onClick={goProfile}
+                      className="
                       w-full flex items-center gap-3 px-3 py-2 rounded-lg 
                       text-sm font-medium text-gray-800 
                       hover:bg-gold-50 hover:text-gold-700 
@@ -259,20 +269,20 @@ const Navbar = ({
                       focus:outline-none focus:ring-2 focus:ring-gold-500/20
                       relative group
                     "
-                  >
-                    <FiUser className="text-lg" />
-                    <span>Account</span>
-                    <div className="absolute left-0 top-0 bottom-0 w-[3px] bg-gold-500 rounded-r opacity-0 group-hover:opacity-100 transition-opacity" />
-                  </button>
+                    >
+                      <FiUser className="text-lg" />
+                      <span>Account</span>
+                      <div className="absolute left-0 top-0 bottom-0 w-[3px] bg-gold-500 rounded-r opacity-0 group-hover:opacity-100 transition-opacity" />
+                    </button>
 
-                  {/* Separator */}
-                  <div className="h-px bg-gray-100 my-2" />
+                    {/* Separator */}
+                    <div className="h-px bg-gray-100 my-2" />
 
-                  {/* Logout */}
-                  <button
-                    role="menuitem"
-                    onClick={handleLogout}
-                    className="
+                    {/* Logout */}
+                    <button
+                      role="menuitem"
+                      onClick={handleLogout}
+                      className="
                       w-full flex items-center gap-3 px-3 py-2 rounded-lg 
                       text-sm font-medium text-red-600 
                       hover:bg-red-50 
@@ -280,16 +290,17 @@ const Navbar = ({
                       active:scale-[0.995]
                       focus:outline-none focus:ring-2 focus:ring-red-500/20
                     "
-                  >
-                    <FiLogOut className="text-lg" />
-                    <span>Logout</span>
-                  </button>
-                </motion.div>
-              )}
-            </AnimatePresence>
+                    >
+                      <FiLogOut className="text-lg" />
+                      <span>Logout</span>
+                    </button>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
           </div>
         </div>
-      </div>
+      </header>
 
       {/* MOBILE SEARCH PANEL — SLIDE FROM BOTTOM */}
       <AnimatePresence>
@@ -301,7 +312,7 @@ const Navbar = ({
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
-              className="fixed inset-0 bg-black/20 backdrop-blur-sm z-40"
+              className="fixed inset-0 bg-black/40 backdrop-blur-sm z-9998"
               onClick={() => setMobileSearchOpen(false)}
             />
 
@@ -319,7 +330,7 @@ const Navbar = ({
                 bg-white rounded-t-3xl 
                 border-t border-gray-200
                 shadow-2xl 
-                z-50 
+                z-9999
                 p-6 pb-8
               "
             >
@@ -399,7 +410,7 @@ const Navbar = ({
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
-              className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40"
+              className="fixed inset-0 bg-black/40 backdrop-blur-sm z-9998"
               onClick={() => setMenuOpen(false)}
             />
 
@@ -418,7 +429,7 @@ const Navbar = ({
               className="
                 mobile-bottom-menu fixed bottom-0 left-0 right-0 
                 bg-white rounded-t-3xl border-t border-gray-100 shadow-xl 
-                max-h-[70vh] overflow-y-auto z-50 
+                max-h-[70vh] overflow-y-auto z-9999
                 pt-3 pb-safe px-4
               "
               style={{
@@ -504,7 +515,7 @@ const Navbar = ({
           </>
         )}
       </AnimatePresence>
-    </header>
+    </>
   );
 };
 

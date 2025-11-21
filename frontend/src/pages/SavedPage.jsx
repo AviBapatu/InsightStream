@@ -167,7 +167,10 @@ const SavedPage = () => {
 
   return (
     <>
-      <Navbar />
+      <Navbar
+        showFilterButton={true}
+        onFilterToggle={() => setShowFilter((prev) => !prev)}
+      />
 
       <main className="bg-white min-h-screen pb-12">
         <div className="max-w-6xl mx-auto px-4 pt-6">

@@ -80,6 +80,24 @@
         "content": "The desperate search for a 5-year-old girl who was swept into the Pacific Ocean Friday as her father drowned attempting to save her continues while southern California braces for more heavy rainfall … [+3872 chars]"
       },
       "savedAt": "2025-11-16T18:18:09.435Z"
+    },
+    {
+      "id": "17ecada8-3dce-4559-8e59-e0bae3dd1838",
+      "userId": "67f1912d-0d15-49d7-af99-2f3dbc9a29f9",
+      "article": {
+        "source": {
+          "id": "the-washington-post",
+          "name": "The Washington Post"
+        },
+        "author": "Lena H. Sun",
+        "title": "Under RFK Jr., CDC promotes false vaccines-autism link it once discredited - The Washington Post",
+        "description": "The CDC’s website now says health authorities ignored evidence of a potential connection between vaccines and autism, despite dozens of studies showing no link.",
+        "url": "https://www.washingtonpost.com/health/2025/11/20/cdc-vaccines-autism-website-change/",
+        "urlToImage": "https://www.washingtonpost.com/wp-apps/imrs.php?src=https://arc-anglerfish-washpost-prod-washpost.s3.amazonaws.com/public/6GI2XGWX6VYLDYTL4JTIC2MISA.jpg&w=1440",
+        "publishedAt": "2025-11-20T08:32:03Z",
+        "content": "The Centers for Disease Control and Prevention has repudiated its past insistence that vaccines do not cause autism after decades of fighting misinformation linking the two, blindsiding career staff … [+37 chars]"
+      },
+      "savedAt": "2025-11-21T11:01:09.129Z"
     }
   ]
 }

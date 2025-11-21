@@ -1,21 +1,33 @@
-import { useState, useEffect, useRef } from "react";
-import { FiFilter, FiX } from "react-icons/fi";
+import { useState, useEffect } from "react";
+import { FiFilter, FiX, FiSearch } from "react-icons/fi";
+import { IoSearchOutline } from "react-icons/io5";
 import { useIsDesktop } from "../hooks/useIsDesktop";
+import { motion, AnimatePresence } from "framer-motion";
 
-const FilterBar = ({ filters, onFilterChange, isSearchMode, isOpen }) => {
+const FilterBar = ({
+  filters,
+  onFilterChange,
+  isSearchMode,
+  isOpen,
+  onClose,
+}) => {
   const isDesktop = useIsDesktop();
-  const [showMobileFilters, setShowMobileFilters] = useState(false);
 
-  // Use refs to track the actual input values without causing re-renders
-  const domainsRef = useRef(filters.domains || "");
-  const excludeDomainsRef = useRef(filters.excludeDomains || "");
-  const domainsTimerRef = useRef(null);
-  const excludeDomainsTimerRef = useRef(null);
+  // Local state for domains input
+  const [domainsInput, setDomainsInput] = useState(filters.domains || "");
+  const [excludeDomainsInput, setExcludeDomainsInput] = useState(
+    filters.excludeDomains || ""
+  );
 
-  // Update refs when filters change externally (e.g., from reset)
+  // Only update local state when filters are reset (empty) or first mount
   useEffect(() => {
-    domainsRef.current = filters.domains || "";
-    excludeDomainsRef.current = filters.excludeDomains || "";
+    // Only sync if the filter was cleared/reset
+    if (filters.domains === "" && domainsInput !== "") {
+      setDomainsInput("");
+    }
+    if (filters.excludeDomains === "" && excludeDomainsInput !== "") {
+      setExcludeDomainsInput("");
+    }
   }, [filters.domains, filters.excludeDomains]);
 
   // Don't show if not opened manually
@@ -25,37 +37,29 @@ const FilterBar = ({ filters, onFilterChange, isSearchMode, isOpen }) => {
     onFilterChange({ ...filters, [key]: value });
   };
 
-  const handleDomainsChange = (e) => {
-    const value = e.target.value;
-    domainsRef.current = value;
-
-    // Clear existing timer
-    if (domainsTimerRef.current) {
-      clearTimeout(domainsTimerRef.current);
-    }
-
-    // Set new timer to update parent after 800ms
-    domainsTimerRef.current = setTimeout(() => {
-      handleFilterChange("domains", value);
-    }, 800);
+  const handleDomainsSearch = () => {
+    handleFilterChange("domains", domainsInput.trim());
   };
 
-  const handleExcludeDomainsChange = (e) => {
-    const value = e.target.value;
-    excludeDomainsRef.current = value;
+  const handleExcludeDomainsSearch = () => {
+    handleFilterChange("excludeDomains", excludeDomainsInput.trim());
+  };
 
-    // Clear existing timer
-    if (excludeDomainsTimerRef.current) {
-      clearTimeout(excludeDomainsTimerRef.current);
+  const handleDomainsKeyPress = (e) => {
+    if (e.key === "Enter") {
+      handleDomainsSearch();
     }
+  };
 
-    // Set new timer to update parent after 800ms
-    excludeDomainsTimerRef.current = setTimeout(() => {
-      handleFilterChange("excludeDomains", value);
-    }, 800);
+  const handleExcludeDomainsKeyPress = (e) => {
+    if (e.key === "Enter") {
+      handleExcludeDomainsSearch();
+    }
   };
 
   const handleReset = () => {
+    setDomainsInput("");
+    setExcludeDomainsInput("");
     onFilterChange({
       language: "",
       sortBy: "publishedAt",
@@ -68,7 +72,8 @@ const FilterBar = ({ filters, onFilterChange, isSearchMode, isOpen }) => {
     });
   };
 
-  const FilterControls = () => (
+  // Render filter controls as JSX directly to avoid re-creating components
+  const filterControls = (
     <>
       {/* Language */}
       <div className="flex flex-col gap-1">
@@ -186,16 +191,51 @@ const FilterBar = ({ filters, onFilterChange, isSearchMode, isOpen }) => {
       {/* Domains */}
       <div className="flex flex-col gap-1 col-span-2">
         <label className="text-xs text-gray-600 font-medium">
-          Domains (comma-separated)
+          Domains (comma-separated, press Enter)
         </label>
-        <input
-          type="text"
-          defaultValue={filters.domains || ""}
-          onChange={handleDomainsChange}
-          placeholder="e.g. bbc.com, cnn.com"
-          className="px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-gold-500 focus:border-gold-500 focus:outline-none"
-          key={`domains-${filters.domains}`}
-        />
+        <div className="relative flex gap-2">
+          <input
+            type="text"
+            value={domainsInput}
+            onChange={(e) => setDomainsInput(e.target.value)}
+            onKeyPress={handleDomainsKeyPress}
+            placeholder="e.g. bbc.com, cnn.com"
+            className="flex-1 px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-gold-500 focus:border-gold-500 focus:outline-none"
+          />
+          <button
+            onClick={handleDomainsSearch}
+            className="px-4 py-2 bg-gold-600 text-white rounded-lg hover:bg-gold-700 transition-colors flex items-center gap-2 text-sm font-medium active:scale-95"
+            title="Apply domains filter"
+          >
+            <IoSearchOutline className="text-lg" />
+            {isDesktop && <span>Apply</span>}
+          </button>
+        </div>
+      </div>
+
+      {/* Exclude Domains */}
+      <div className="flex flex-col gap-1 col-span-2">
+        <label className="text-xs text-gray-600 font-medium">
+          Exclude Domains (comma-separated, press Enter)
+        </label>
+        <div className="relative flex gap-2">
+          <input
+            type="text"
+            value={excludeDomainsInput}
+            onChange={(e) => setExcludeDomainsInput(e.target.value)}
+            onKeyPress={handleExcludeDomainsKeyPress}
+            placeholder="e.g. tabloid.com"
+            className="flex-1 px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-gold-500 focus:border-gold-500 focus:outline-none"
+          />
+          <button
+            onClick={handleExcludeDomainsSearch}
+            className="px-4 py-2 bg-gold-600 text-white rounded-lg hover:bg-gold-700 transition-colors flex items-center gap-2 text-sm font-medium active:scale-95"
+            title="Apply exclude domains filter"
+          >
+            <IoSearchOutline className="text-lg" />
+            {isDesktop && <span>Apply</span>}
+          </button>
+        </div>
       </div>
     </>
   );
@@ -217,9 +257,7 @@ const FilterBar = ({ filters, onFilterChange, isSearchMode, isOpen }) => {
               Reset All
             </button>
           </div>
-          <div className="grid grid-cols-4 gap-3">
-            <FilterControls />
-          </div>
+          <div className="grid grid-cols-4 gap-3">{filterControls}</div>
         </div>
       </div>
     );
@@ -227,53 +265,77 @@ const FilterBar = ({ filters, onFilterChange, isSearchMode, isOpen }) => {
 
   // Mobile Layout
   return (
-    <>
-      <button
-        onClick={() => setShowMobileFilters(true)}
-        className="fixed bottom-20 right-6 bg-gold-700 text-white p-3 rounded-full shadow-lg z-40 flex items-center gap-2"
-      >
-        <FiFilter />
-      </button>
+    <AnimatePresence>
+      {isOpen && (
+        <>
+          {/* Backdrop */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="fixed inset-0 bg-black/40 backdrop-blur-sm z-9998"
+            onClick={onClose}
+          />
 
-      {/* Mobile Bottom Sheet */}
-      {showMobileFilters && (
-        <div
-          className="fixed inset-0 bg-black/50 z-50 flex items-end"
-          onClick={() => setShowMobileFilters(false)}
-        >
-          <div
-            className="bg-white rounded-t-2xl w-full max-h-[80vh] overflow-y-auto p-6"
+          {/* Mobile Bottom Sheet */}
+          <motion.div
+            initial={{ translateY: "100%", opacity: 0 }}
+            animate={{ translateY: 0, opacity: 1 }}
+            exit={{ translateY: "100%", opacity: 0 }}
+            transition={{
+              duration: 0.25,
+              ease: "easeOut",
+            }}
+            className="
+              fixed bottom-0 left-0 right-0 
+              bg-white rounded-t-3xl 
+              border-t border-gray-200
+              shadow-2xl 
+              z-9999
+              max-h-[85vh] overflow-y-auto
+              p-6 pb-8
+            "
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold text-gray-800">Filters</h3>
-              <button onClick={() => setShowMobileFilters(false)}>
+            {/* Handle */}
+            <div className="w-12 h-1.5 bg-gray-300 rounded-full mx-auto mb-4" />
+
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-lg font-semibold text-gray-800 flex items-center gap-2">
+                <FiFilter className="text-gold-600" />
+                Filters
+              </h3>
+              <button
+                onClick={onClose}
+                className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+              >
                 <FiX className="text-2xl text-gray-600" />
               </button>
             </div>
 
-            <div className="flex flex-col gap-4">
-              <FilterControls />
-            </div>
+            <div className="flex flex-col gap-4 mb-6">{filterControls}</div>
 
-            <div className="flex gap-3 mt-6">
+            <div className="flex gap-3 pt-4 border-t border-gray-200">
               <button
-                onClick={handleReset}
-                className="flex-1 px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50"
+                onClick={() => {
+                  handleReset();
+                }}
+                className="flex-1 px-4 py-3 border border-gray-300 rounded-xl text-gray-700 font-medium hover:bg-gray-50 active:scale-95 transition-all"
               >
-                Reset
+                Reset All
               </button>
               <button
-                onClick={() => setShowMobileFilters(false)}
-                className="flex-1 px-4 py-2 bg-gold-700 text-white rounded-lg hover:bg-gold-800"
+                onClick={onClose}
+                className="flex-1 px-4 py-3 bg-gold-600 text-white font-medium rounded-xl hover:bg-gold-700 active:scale-95 transition-all"
               >
-                Apply
+                Apply Filters
               </button>
             </div>
-          </div>
-        </div>
+          </motion.div>
+        </>
       )}
-    </>
+    </AnimatePresence>
   );
 };
 

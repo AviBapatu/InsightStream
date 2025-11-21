@@ -7,18 +7,15 @@ const categories = [
   "Entertainment",
   "Health",
   "Science",
-  "General"
+  "General",
 ];
 
 const CategoryBar = ({ activeCategory, setActiveCategory }) => {
-
   return (
     <div className="w-full bg-white border-b border-gray-100">
       <div className="max-w-6xl mx-auto px-4">
-
         {/* Scrollable Row */}
         <div className="flex gap-2 md:gap-4 lg:gap-6 overflow-x-auto scrollbar-hide h-14 items-center lg:justify-center">
-
           {categories.map((cat) => {
             const isActive = activeCategory === cat;
 
@@ -36,7 +33,6 @@ const CategoryBar = ({ activeCategory, setActiveCategory }) => {
               </button>
             );
           })}
-
         </div>
       </div>
 

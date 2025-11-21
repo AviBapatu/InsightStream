@@ -14,7 +14,7 @@ const HeroArticle = ({ article }) => {
   const navigate = useNavigate();
   const isDesktop = useIsDesktop();
   const openReader = useReaderStore((s) => s.openReader);
-  
+
   const token = useAuthStore((s) => s.token);
   const bookmarks = useBookmarksStore((s) => s.bookmarks);
   const addBookmark = useBookmarksStore((s) => s.addBookmark);
@@ -24,12 +24,12 @@ const HeroArticle = ({ article }) => {
 
   const handleClick = () => {
     const desktopNow = window.matchMedia("(min-width: 1024px)").matches;
-    
+
     if (desktopNow) {
       openReader(article);
       return;
     }
-    
+
     const safeId = encodeURIComponent(article.url);
     navigate(`/article/${safeId}`, { state: { article } });
   };
@@ -107,22 +107,26 @@ const HeroArticle = ({ article }) => {
         <div className="p-4 md:p-5">
           {/* Category Badge */}
           <div className="mb-2">
-            <span className="
+            <span
+              className="
               text-xs uppercase tracking-wider font-medium
               text-gold-600
-            ">
+            "
+            >
               {category}
             </span>
           </div>
 
           {/* Title */}
-          <h1 className="
+          <h1
+            className="
             text-lg md:text-xl lg:text-2xl
             font-bold text-gray-900
             leading-snug
             line-clamp-2
             mb-2
-          ">
+          "
+          >
             {article.title}
           </h1>
 

@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import NewsCard from "./NewsCard";
 
-const PremiumMagazineGrid = ({ articles = [], loading }) => {
+const MagazineGrid = ({ articles = [], loading }) => {
   if (loading) {
     return (
       <div className="max-w-6xl mx-auto px-4 mt-8">
@@ -26,7 +26,7 @@ const PremiumMagazineGrid = ({ articles = [], loading }) => {
   const getCardSize = (index) => {
     // Pattern B: Row 1: [BIG, small, small], Row 2: [small, BIG, small], Row 3: [small, small, BIG]
     const pattern = index % 6;
-    
+
     // Desktop grid classes
     if (pattern === 0 || pattern === 4) return "lg:col-span-6"; // Big card positions
     return "lg:col-span-3"; // Small card positions
@@ -52,10 +52,7 @@ const PremiumMagazineGrid = ({ articles = [], loading }) => {
               md:col-span-1
             `}
           >
-            <PremiumNewsCard 
-              article={article} 
-              variant={getCardVariant(idx)}
-            />
+            <NewsCard article={article} variant={getCardVariant(idx)} />
           </motion.div>
         ))}
       </div>
@@ -63,7 +60,6 @@ const PremiumMagazineGrid = ({ articles = [], loading }) => {
   );
 };
 
-// Enhanced NewsCard for Premium Magazine Grid
 import { useNavigate } from "react-router-dom";
 import { useIsDesktop } from "../hooks/useIsDesktop";
 import { useReaderStore } from "../store/useReaderStore";
@@ -75,11 +71,11 @@ import relativeTime from "dayjs/plugin/relativeTime";
 
 dayjs.extend(relativeTime);
 
-const PremiumNewsCard = ({ article, variant = "small" }) => {
+const NewsCard = ({ article, variant = "small" }) => {
   const navigate = useNavigate();
   const isDesktop = useIsDesktop();
   const openReader = useReaderStore((s) => s.openReader);
-  
+
   const token = useAuthStore((s) => s.token);
   const bookmarks = useBookmarksStore((s) => s.bookmarks);
   const addBookmark = useBookmarksStore((s) => s.addBookmark);
@@ -89,12 +85,12 @@ const PremiumNewsCard = ({ article, variant = "small" }) => {
 
   const handleClick = () => {
     const desktopNow = window.matchMedia("(min-width: 1024px)").matches;
-    
+
     if (desktopNow) {
       openReader(article);
       return;
     }
-    
+
     const safeId = encodeURIComponent(article.url);
     navigate(`/article/${safeId}`, { state: { article } });
   };
@@ -179,7 +175,11 @@ const PremiumNewsCard = ({ article, variant = "small" }) => {
             leading-snug tracking-tight 
             line-clamp-3
             grow
-            ${variant === "large" ? "text-xl md:text-2xl" : "text-base md:text-lg"}
+            ${
+              variant === "large"
+                ? "text-xl md:text-2xl"
+                : "text-base md:text-lg"
+            }
           `}
         >
           {article.title}
@@ -203,4 +203,4 @@ const PremiumNewsCard = ({ article, variant = "small" }) => {
   );
 };
 
-export default PremiumMagazineGrid;
+export default MagazineGrid;

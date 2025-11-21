@@ -16,12 +16,12 @@ const HighlightsScroller = ({ articles }) => {
 
   const handleClick = (article) => {
     const desktopNow = window.matchMedia("(min-width: 1024px)").matches;
-    
+
     if (desktopNow) {
       openReader(article);
       return;
     }
-    
+
     const safeId = encodeURIComponent(article.url);
     navigate(`/article/${safeId}`, { state: { article } });
   };
@@ -34,7 +34,7 @@ const HighlightsScroller = ({ articles }) => {
       </h2>
 
       {/* Horizontal Scroller */}
-      <div 
+      <div
         className="
           flex gap-4 md:gap-6 
           overflow-x-auto 
@@ -43,8 +43,8 @@ const HighlightsScroller = ({ articles }) => {
           pb-2
         "
         style={{
-          scrollbarWidth: 'none',
-          msOverflowStyle: 'none',
+          scrollbarWidth: "none",
+          msOverflowStyle: "none",
         }}
       >
         {articles.slice(0, 4).map((article, idx) => (
@@ -63,13 +63,15 @@ const HighlightsScroller = ({ articles }) => {
             "
           >
             {/* Card */}
-            <div className="
+            <div
+              className="
               relative rounded-xl overflow-hidden 
               shadow-xs hover:shadow-lg
               transition-all duration-300
               active:scale-95 md:hover:scale-[1.02]
               h-full
-            ">
+            "
+            >
               {/* Image with Overlay */}
               <div className="relative aspect-3/2 bg-gray-100">
                 {article.urlToImage ? (
@@ -80,12 +82,14 @@ const HighlightsScroller = ({ articles }) => {
                       className="w-full h-full object-cover"
                     />
                     {/* Gradient Overlay */}
-                    <div className="
+                    <div
+                      className="
                       absolute inset-0 
                       bg-linear-to-t from-black/80 via-black/40 to-transparent
                       group-hover:from-black/90 group-hover:via-black/50
                       transition-all duration-300
-                    "/>
+                    "
+                    />
                   </>
                 ) : (
                   <div className="w-full h-full flex items-center justify-center text-gray-400 text-xs">
@@ -95,13 +99,15 @@ const HighlightsScroller = ({ articles }) => {
 
                 {/* Title Overlay */}
                 <div className="absolute bottom-0 left-0 right-0 p-4">
-                  <h3 className="
+                  <h3
+                    className="
                     text-white font-medium text-base md:text-lg
                     leading-snug line-clamp-2
-                  ">
+                  "
+                  >
                     {article.title}
                   </h3>
-                  
+
                   {/* Metadata */}
                   <div className="flex items-center gap-2 text-xs text-white/80 mt-2">
                     <span>{article.source?.name}</span>
