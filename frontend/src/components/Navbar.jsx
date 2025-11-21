@@ -17,6 +17,7 @@ const Navbar = ({
 }) => {
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [dragProgress, setDragProgress] = useState(0);
   const avatarButtonRef = useRef(null);
 
   const isDesktop = useIsDesktop();
@@ -404,14 +405,21 @@ const Navbar = ({
       <AnimatePresence>
         {!isDesktop && user && menuOpen && (
           <>
-            {/* Backdrop */}
+            {/* Backdrop - fades out when dragging up */}
             <motion.div
               initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
+              animate={{ opacity: 1 - dragProgress }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
               className="fixed inset-0 bg-black/40 backdrop-blur-sm z-9998"
               onClick={() => setMenuOpen(false)}
+            />
+
+            {/* White Foreground Overlay (appears when dragging up) */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: dragProgress }}
+              className="fixed inset-0 bg-white z-9999 pointer-events-none"
             />
 
             {/* Bottom Sheet */}
@@ -426,21 +434,44 @@ const Navbar = ({
                 duration: 0.26,
                 ease: [0.16, 0.84, 0.24, 1],
               }}
+              drag="y"
+              dragConstraints={{ top: -100, bottom: 0 }}
+              dragElastic={{ top: 0.1, bottom: 0.3 }}
+              onDrag={(event, info) => {
+                // Calculate opacity for white overlay based on upward drag
+                // 0 at rest, 1 at -100px drag
+                const progress = Math.min(Math.max(-info.offset.y / 100, 0), 1);
+                setDragProgress(progress);
+              }}
+              onDragEnd={(event, info) => {
+                // Reset progress
+                setDragProgress(0);
+
+                // If dragged down more than 100px, close the sheet
+                if (info.offset.y > 100) {
+                  setMenuOpen(false);
+                }
+                // If dragged up more than 80px, navigate to profile
+                else if (info.offset.y < -80) {
+                  setMenuOpen(false);
+                  navigate("/profile");
+                }
+              }}
               className="
                 mobile-bottom-menu fixed bottom-0 left-0 right-0 
                 bg-white rounded-t-3xl border-t border-gray-100 shadow-xl 
-                max-h-[70vh] overflow-y-auto z-9999
-                pt-3 pb-safe px-4
+                max-h-[70vh] overflow-y-auto z-10000
+                pt-3 pb-safe px-4 touch-none
               "
               style={{
                 boxShadow: "0 8px 18px rgba(19, 19, 24, 0.06)",
               }}
             >
-              {/* Handle */}
-              <div className="w-10 h-1.5 bg-gray-300 rounded-full mx-auto mb-3" />
+              {/* Handle - Make it more prominent for dragging */}
+              <div className="w-10 h-1.5 bg-gray-300 rounded-full mx-auto mb-3 cursor-grab active:cursor-grabbing" />
 
               {/* Identity Block */}
-              <div className="flex items-center gap-4 px-3 py-2 mb-4">
+              <div className="flex items-center gap-4 px-3 py-2 mb-4 pointer-events-none">
                 <div className="w-12 h-12 rounded-full overflow-hidden ring-1 ring-gold-500/30">
                   <img
                     src={
@@ -463,7 +494,7 @@ const Navbar = ({
               </div>
 
               {/* Actions List */}
-              <div className="space-y-1">
+              <div className="space-y-1 pointer-events-auto">
                 <button
                   onClick={goSaved}
                   className="
@@ -496,7 +527,7 @@ const Navbar = ({
               </div>
 
               {/* Separator */}
-              <div className="h-px bg-gray-100 my-3" />
+              <div className="h-px bg-gray-100 my-3 pointer-events-none" />
 
               {/* Logout */}
               <button
@@ -505,7 +536,7 @@ const Navbar = ({
                   w-full flex items-center gap-3 px-4 py-3 rounded-lg 
                   text-base font-medium text-red-600 
                   hover:bg-red-50 active:bg-red-50 
-                  transition-all active:scale-95
+                  transition-all active:scale-95 pointer-events-auto
                 "
               >
                 <FiLogOut className="text-xl" />
