@@ -46,6 +46,8 @@ export const useAuthStore = create((set, get) => ({
         name: res.data.name,
         email: res.data.email,
         avatar: res.data.avatar,
+        language: res.data.language || "en",
+        country: res.data.country || "us",
       };
 
       localStorage.setItem("token", token);
@@ -73,6 +75,8 @@ export const useAuthStore = create((set, get) => ({
         name: res.data.name,
         email: res.data.email,
         avatar: res.data.avatar,
+        language: res.data.language || "en",
+        country: res.data.country || "us",
       };
 
       localStorage.setItem("token", token);
@@ -108,6 +112,50 @@ export const useAuthStore = create((set, get) => ({
     } catch (err) {
       console.error("Avatar update error:", err);
       throw err.response?.data || { message: "Avatar update failed" };
+    }
+  },
+
+  updateProfile: async (updates) => {
+    const user = get().user;
+    const token = get().token;
+    if (!user || !token) throw new Error("Not authenticated");
+
+    try {
+      const res = await api.patch(`/users/${user.id}`, updates, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      const updatedUser = { ...user, ...res.data };
+      set({ user: updatedUser });
+      localStorage.setItem("user", JSON.stringify(updatedUser));
+
+      return true;
+    } catch (err) {
+      console.error("Profile update error:", err);
+      throw err.response?.data || { message: "Profile update failed" };
+    }
+  },
+
+  deleteAccount: async () => {
+    const user = get().user;
+    const token = get().token;
+    if (!user || !token) throw new Error("Not authenticated");
+
+    try {
+      await api.delete(`/users/${user.id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      // Clear all user data
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+      localStorage.removeItem(`bookmarks_${user.id}`);
+
+      set({ user: null, token: null });
+      return true;
+    } catch (err) {
+      console.error("Account deletion error:", err);
+      throw err.response?.data || { message: "Account deletion failed" };
     }
   },
 

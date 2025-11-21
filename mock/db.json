@@ -5,7 +5,9 @@
       "name": "avi",
       "email": "avi@gmail.com",
       "password": "asdfasdf",
-      "avatar": "avatar1.png"
+      "avatar": "avatar1.png",
+      "language": "en",
+      "country": "us"
     }
   ],
   "bookmarks": [

@@ -40,7 +40,15 @@ server.post("/signup", (req, res) => {
     const avatar = avatarList[Math.floor(Math.random() * avatarList.length)];
 
     const id = uuid();
-    const newUser = { id: id, name, email, password, avatar };
+    const newUser = {
+      id: id,
+      name,
+      email,
+      password,
+      avatar,
+      language: "en",
+      country: "us",
+    };
     db.get("users").push(newUser).write();
 
     const SECRET = process.env.JWT_SUPER_SECRET_KEY;
@@ -52,6 +60,8 @@ server.post("/signup", (req, res) => {
       name: newUser.name,
       email: newUser.email,
       avatar: newUser.avatar,
+      language: newUser.language,
+      country: newUser.country,
       token,
     });
   } catch (e) {
@@ -85,10 +95,25 @@ server.post("/login", (req, res) => {
         .write();
     }
 
+    // Add default language and country if missing
+    if (!user.language || !user.country) {
+      db.get("users")
+        .find({ id: user.id })
+        .assign({
+          language: user.language || "en",
+          country: user.country || "us",
+        })
+        .write();
+      user.language = user.language || "en";
+      user.country = user.country || "us";
+    }
+
     return res.status(200).json({
       name: user.name,
       email: user.email,
       avatar: user.avatar,
+      language: user.language,
+      country: user.country,
       token,
     });
   } catch (e) {
@@ -121,6 +146,73 @@ server.patch("/users/:id/avatar", (req, res) => {
     return res.status(200).json({ avatar });
   } catch (e) {
     console.error("PATCH /users/:id/avatar error:", e);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+// Update user profile (name, language, country, etc.)
+server.patch("/users/:id", (req, res) => {
+  try {
+    const user = req.user;
+    if (!user) return res.status(401).json({ message: "Unauthorized" });
+
+    const { id } = req.params;
+    const updates = req.body;
+
+    const db = router.db;
+    const existing = db.get("users").find({ id }).value();
+
+    if (!existing) return res.status(404).json({ message: "User not found" });
+    if (existing.id !== user.id)
+      return res.status(403).json({ message: "Forbidden" });
+
+    // Only allow updating specific fields
+    const allowedFields = ["name", "language", "country"];
+    const filteredUpdates = {};
+
+    allowedFields.forEach((field) => {
+      if (updates[field] !== undefined) {
+        filteredUpdates[field] = updates[field];
+      }
+    });
+
+    db.get("users").find({ id }).assign(filteredUpdates).write();
+
+    const updated = db.get("users").find({ id }).value();
+
+    // Return user data without password
+    const { password, ...userData } = updated;
+    return res.status(200).json(userData);
+  } catch (e) {
+    console.error("PATCH /users/:id error:", e);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+// Delete user account
+server.delete("/users/:id", (req, res) => {
+  try {
+    const user = req.user;
+    if (!user) return res.status(401).json({ message: "Unauthorized" });
+
+    const { id } = req.params;
+
+    const db = router.db;
+    const existing = db.get("users").find({ id }).value();
+
+    if (!existing) return res.status(404).json({ message: "User not found" });
+    if (existing.id !== user.id)
+      return res.status(403).json({ message: "Forbidden" });
+
+    // Delete user's bookmarks
+    db.get("bookmarks").remove({ userId: id }).write();
+
+    // Delete user
+    db.get("users").remove({ id }).write();
+
+    return res.status(200).json({ message: "Account deleted successfully" });
+  } catch (e) {
+    console.error("DELETE /users/:id error:", e);
     return res.status(500).json({ message: "Internal server error" });
   }
 });
