@@ -1,3 +1,42 @@
+/**
+ * Bookmarks Store (useBookmarksStore)
+ *
+ * Manages saved/bookmarked articles for users with local and server sync.
+ * Provides offline support with localStorage and syncs with backend when online.
+ *
+ * State:
+ * - bookmarks: Array of saved articles with metadata (article, savedAt, id)
+ * - queued: Array of pending sync operations
+ * - loading: Loading state for async operations
+ * - userId: Current user ID for scoped storage
+ *
+ * Actions:
+ * - initForUser(userId, token): Initialize bookmarks for logged-in or guest user
+ * - addBookmark(article, token): Save an article to bookmarks
+ * - removeBookmark(bookmarkId, token): Remove a saved article
+ * - isBookmarked(article): Check if an article is already bookmarked
+ * - syncWithServer(token): Sync local bookmarks with server
+ * - loadLocal(): Load bookmarks from localStorage
+ * - saveLocal(): Save bookmarks to localStorage
+ *
+ * Features:
+ * - Automatic sync on user login
+ * - Offline support with localStorage
+ * - Queue system for pending operations
+ * - Merge strategy for local and server data
+ * - Guest mode support (local-only storage)
+ *
+ * Storage:
+ * - localStorage key: `bookmarks_{userId}` for scoped storage
+ * - Syncs with backend on login/signup
+ * - Persists across sessions
+ *
+ * @example
+ * const addBookmark = useBookmarksStore((s) => s.addBookmark);
+ * const bookmarks = useBookmarksStore((s) => s.bookmarks);
+ * await addBookmark(article, token);
+ */
+
 import { create } from "zustand";
 import api from "../api/api";
 import { v4 as uuid } from "uuid";

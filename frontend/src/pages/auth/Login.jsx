@@ -1,73 +1,122 @@
+/**
+ * Login Component
+ *
+ * User authentication login page with email and password.
+ * Features:
+ * - Email and password input fields
+ * - Form validation
+ * - Error handling and display
+ * - Loading state during authentication
+ * - Link to signup page
+ *
+ * Uses the new modular component library for consistent styling
+ * and better maintainability.
+ */
+
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuthStore } from "../../store/useAuthStore";
+import { Button, Input, FormField, FormSection } from "../../components/common";
 
 const Login = () => {
   const navigate = useNavigate();
   const login = useAuthStore((s) => s.login);
   const loading = useAuthStore((s) => s.loading);
 
+  // Form state
   const [form, setForm] = useState({ email: "", password: "" });
-  const [error, setError] = useState("");
+  const [errors, setErrors] = useState({
+    email: "",
+    password: "",
+    general: "",
+  });
 
-  const handleChange = (e) =>
-    setForm({ ...form, [e.target.name]: e.target.value });
+  // Handle input changes
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setForm({ ...form, [name]: value });
+    // Clear error for this field when user types
+    setErrors({ ...errors, [name]: "", general: "" });
+  };
 
+  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError("");
+    setErrors({ email: "", password: "", general: "" });
 
     try {
       await login(form.email, form.password);
       navigate("/home");
     } catch (err) {
-      setError(err.message || "Login failed");
+      setErrors({ ...errors, general: err.message || "Login failed" });
     }
   };
 
   return (
     <div>
+      {/* Page Title */}
       <h2 className="title-auth">Sign in to your account</h2>
       <p className="subtitle-auth">Continue to your news dashboard</p>
 
-      {error && <p className="text-red-600 text-sm mb-3">{error}</p>}
+      {/* General Error Message */}
+      {errors.general && (
+        <div
+          className="text-sm mb-4 p-3 rounded-lg"
+          style={{
+            backgroundColor: "var(--color-danger-50)",
+            color: "var(--color-danger-700)",
+            border: "1px solid var(--color-danger-200)",
+          }}
+        >
+          {errors.general}
+        </div>
+      )}
 
+      {/* Login Form */}
       <form onSubmit={handleSubmit} className="form-section">
-        <div>
-          <label className="text-sm font-medium text-gray-700 mb-1 block">
-            Email
-          </label>
-          <input
-            type="email"
-            name="email"
-            className="input-style"
-            value={form.email}
-            onChange={handleChange}
-            autoComplete="email"
-            required
-          />
-        </div>
+        <FormSection>
+          {/* Email Field */}
+          <FormField label="Email" error={errors.email} required>
+            <Input
+              type="email"
+              name="email"
+              value={form.email}
+              onChange={handleChange}
+              placeholder="Enter your email"
+              error={errors.email}
+              autoComplete="email"
+              required
+            />
+          </FormField>
 
-        <div>
-          <label className="text-sm font-medium text-gray-700 mb-1 block">
-            Password
-          </label>
-          <input
-            type="password"
-            name="password"
-            className="input-style"
-            value={form.password}
-            onChange={handleChange}
-            autoComplete="current-password"
-            required
-          />
-        </div>
+          {/* Password Field */}
+          <FormField label="Password" error={errors.password} required>
+            <Input
+              type="password"
+              name="password"
+              value={form.password}
+              onChange={handleChange}
+              placeholder="Enter your password"
+              error={errors.password}
+              autoComplete="current-password"
+              required
+            />
+          </FormField>
 
-        <button type="submit" disabled={loading} className="btn-style">
-          {loading ? "Signing in..." : "Sign in"}
-        </button>
+          {/* Submit Button */}
+          <Button
+            type="submit"
+            variant="primary"
+            fullWidth
+            isLoading={loading}
+            disabled={loading}
+          >
+            {loading ? "Signing in..." : "Sign in"}
+          </Button>
+        </FormSection>
       </form>
 
+      {/* Signup Link */}
       <p className="bottom-link">
         New here?{" "}
         <Link to="/signup" className="text-gold-700 underline">

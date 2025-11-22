@@ -4,6 +4,37 @@ import { IoSearchOutline } from "react-icons/io5";
 import { useIsDesktop } from "../hooks/useIsDesktop";
 import { motion, AnimatePresence } from "framer-motion";
 import DraggableBottomSheet from "./modals/DraggableBottomSheet";
+import { CustomDropdown } from "./common";
+
+// Language options for filter
+const LANGUAGE_OPTIONS = [
+  { code: "", name: "All Languages", flag: "🌐" },
+  { code: "en", name: "English", flag: "🇬🇧" },
+  { code: "es", name: "Spanish", flag: "🇪🇸" },
+  { code: "fr", name: "French", flag: "🇫🇷" },
+  { code: "de", name: "German", flag: "🇩🇪" },
+  { code: "it", name: "Italian", flag: "🇮🇹" },
+  { code: "pt", name: "Portuguese", flag: "🇵🇹" },
+  { code: "ru", name: "Russian", flag: "🇷🇺" },
+  { code: "ar", name: "Arabic", flag: "🇸🇦" },
+  { code: "zh", name: "Chinese", flag: "🇨🇳" },
+];
+
+// Sort options
+const SORT_OPTIONS = [
+  { code: "publishedAt", name: "Latest", flag: "🕒" },
+  { code: "relevancy", name: "Relevancy", flag: "🎯" },
+  { code: "popularity", name: "Popularity", flag: "🔥" },
+];
+
+// Date range options
+const DATE_OPTIONS = [
+  { code: "", name: "Any Time", flag: "📅" },
+  { code: "today", name: "Today", flag: "📆" },
+  { code: "24h", name: "Past 24 Hours", flag: "⏰" },
+  { code: "7d", name: "Past 7 Days", flag: "📊" },
+  { code: "30d", name: "Past 30 Days", flag: "📈" },
+];
 
 const FilterBar = ({
   filters,
@@ -75,45 +106,48 @@ const FilterBar = ({
     <>
       {/* Language */}
       <div className="flex flex-col gap-1">
-        <label className="text-xs text-gray-600 font-medium">Language</label>
-        <select
-          value={filters.language || ""}
-          onChange={(e) => handleFilterChange("language", e.target.value)}
-          className="px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-gold-500 focus:border-gold-500 focus:outline-none"
+        <label
+          className="text-xs font-medium"
+          style={{ color: "var(--color-text-secondary)" }}
         >
-          <option value="">All Languages</option>
-          <option value="en">English</option>
-          <option value="es">Spanish</option>
-          <option value="fr">French</option>
-          <option value="de">German</option>
-          <option value="it">Italian</option>
-          <option value="pt">Portuguese</option>
-          <option value="ru">Russian</option>
-          <option value="ar">Arabic</option>
-          <option value="zh">Chinese</option>
-        </select>
+          Language
+        </label>
+        <CustomDropdown
+          value={filters.language || ""}
+          options={LANGUAGE_OPTIONS}
+          onChange={(value) => handleFilterChange("language", value)}
+          placeholder="All Languages"
+        />
       </div>
 
       {/* Sort By */}
       <div className="flex flex-col gap-1">
-        <label className="text-xs text-gray-600 font-medium">Sort By</label>
-        <select
-          value={filters.sortBy || "publishedAt"}
-          onChange={(e) => handleFilterChange("sortBy", e.target.value)}
-          className="px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-gold-500 focus:border-gold-500 focus:outline-none"
+        <label
+          className="text-xs font-medium"
+          style={{ color: "var(--color-text-secondary)" }}
         >
-          <option value="publishedAt">Latest</option>
-          <option value="relevancy">Relevancy</option>
-          <option value="popularity">Popularity</option>
-        </select>
+          Sort By
+        </label>
+        <CustomDropdown
+          value={filters.sortBy || "publishedAt"}
+          options={SORT_OPTIONS}
+          onChange={(value) => handleFilterChange("sortBy", value)}
+          placeholder="Sort By"
+        />
       </div>
 
       {/* Date Range */}
       <div className="flex flex-col gap-1">
-        <label className="text-xs text-gray-600 font-medium">Date Range</label>
-        <select
-          onChange={(e) => {
-            const value = e.target.value;
+        <label
+          className="text-xs font-medium"
+          style={{ color: "var(--color-text-secondary)" }}
+        >
+          Date Range
+        </label>
+        <CustomDropdown
+          value={filters.dateRange || ""}
+          options={DATE_OPTIONS}
+          onChange={(value) => {
             const today = new Date();
             let from = "";
             let to = today.toISOString().split("T")[0];
@@ -136,22 +170,31 @@ const FilterBar = ({
 
             handleFilterChange("from", from);
             handleFilterChange("to", value ? to : "");
+            handleFilterChange("dateRange", value); // Store selected value
           }}
-          className="px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-gold-500 focus:border-gold-500 focus:outline-none"
-        >
-          <option value="">Any Time</option>
-          <option value="today">Today</option>
-          <option value="24h">Past 24 Hours</option>
-          <option value="7d">Past 7 Days</option>
-          <option value="30d">Past 30 Days</option>
-        </select>
+          placeholder="Any Time"
+        />
       </div>
 
       {/* Search In */}
       <div className="flex flex-col gap-1">
-        <label className="text-xs text-gray-600 font-medium">Search In</label>
-        <div className="flex gap-3 items-center px-3 py-2 border border-gray-200 rounded-lg bg-white">
-          <label className="flex items-center gap-1 text-sm cursor-pointer">
+        <label
+          className="text-xs font-medium"
+          style={{ color: "var(--color-text-secondary)" }}
+        >
+          Search In
+        </label>
+        <div
+          className="flex gap-3 items-center px-3 py-2 border rounded-lg"
+          style={{
+            backgroundColor: "var(--color-card)",
+            borderColor: "var(--color-border)",
+          }}
+        >
+          <label
+            className="flex items-center gap-1 text-sm cursor-pointer"
+            style={{ color: "var(--color-text-primary)" }}
+          >
             <input
               type="checkbox"
               checked={filters.searchIn?.includes("title")}
@@ -163,11 +206,15 @@ const FilterBar = ({
                   : current.filter((s) => s !== "title");
                 handleFilterChange("searchIn", updated.join(","));
               }}
-              className="rounded text-gold-700 focus:ring-gold-500"
+              className="rounded focus:ring-2"
+              style={{ accentColor: "var(--color-primary-600)" }}
             />
             Title
           </label>
-          <label className="flex items-center gap-1 text-sm cursor-pointer">
+          <label
+            className="flex items-center gap-1 text-sm cursor-pointer"
+            style={{ color: "var(--color-text-primary)" }}
+          >
             <input
               type="checkbox"
               checked={filters.searchIn?.includes("description")}
@@ -179,7 +226,8 @@ const FilterBar = ({
                   : current.filter((s) => s !== "description");
                 handleFilterChange("searchIn", updated.join(","));
               }}
-              className="rounded text-gold-700 focus:ring-gold-500"
+              className="rounded focus:ring-2"
+              style={{ accentColor: "var(--color-primary-600)" }}
             />
             Desc
           </label>
@@ -188,7 +236,10 @@ const FilterBar = ({
 
       {/* Domains */}
       <div className="flex flex-col gap-1 col-span-2">
-        <label className="text-xs text-gray-600 font-medium">
+        <label
+          className="text-xs font-medium"
+          style={{ color: "var(--color-text-secondary)" }}
+        >
           Domains (comma-separated, press Enter)
         </label>
         <div className="relative flex gap-2">

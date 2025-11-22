@@ -111,9 +111,7 @@ const ThemeCard = ({ theme, isActive, onSelect, isCustom = false }) => {
       onClick={onSelect}
       className={`
         relative p-4 rounded-xl border-2 cursor-pointer
-        ${
-          isActive ? "shadow-lg" : "hover:shadow-md"
-        }
+        ${isActive ? "shadow-lg" : "hover:shadow-md"}
       `}
       style={{
         backgroundColor: isActive
@@ -122,12 +120,12 @@ const ThemeCard = ({ theme, isActive, onSelect, isCustom = false }) => {
         borderColor: isActive
           ? "var(--color-primary-600)"
           : "var(--color-border)",
-        transition: "all 0.3s ease-in-out"
+        transition: "all 0.3s ease-in-out",
       }}
     >
       {/* Active Indicator */}
       {isActive && (
-        <div 
+        <div
           className="absolute top-2 right-2 w-6 h-6 rounded-full flex items-center justify-center transition-all duration-300"
           style={{ backgroundColor: "var(--color-primary-600)" }}
         >

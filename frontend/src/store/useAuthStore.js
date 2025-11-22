@@ -1,3 +1,34 @@
+/**
+ * Authentication Store (useAuthStore)
+ *
+ * Manages user authentication state and operations using Zustand.
+ * Handles user login, signup, logout, profile updates, and token validation.
+ *
+ * State:
+ * - user: Current logged-in user object (id, name, email, avatar, language, country)
+ * - token: JWT authentication token
+ * - loading: Loading state for async operations
+ *
+ * Actions:
+ * - validateToken(): Validates JWT token on app load
+ * - signup(name, email, password): Creates new user account
+ * - login(email, password): Authenticates existing user
+ * - logout(): Logs out user and clears storage
+ * - updateProfile(updates): Updates user profile (name, language, country, etc.)
+ * - updateAvatar(avatar, token): Updates user avatar
+ * - deleteAccount(): Permanently deletes user account
+ *
+ * Storage:
+ * - Persists user and token in localStorage
+ * - Auto-validates token on app initialization
+ * - Clears storage on logout or token expiration
+ *
+ * @example
+ * const login = useAuthStore((s) => s.login);
+ * const user = useAuthStore((s) => s.user);
+ * await login('user@example.com', 'password');
+ */
+
 import { create } from "zustand";
 import api from "../api/api";
 import { jwtDecode } from "jwt-decode";

@@ -29,20 +29,31 @@ const BottomSheet = ({ isOpen, onClose, title, children }) => {
         className={`absolute bottom-0 left-0 right-0 rounded-t-3xl shadow-2xl max-h-[80vh] overflow-hidden transition-transform duration-300 ease-out ${
           isOpen ? "translate-y-0" : "translate-y-full"
         }`}
-        style={{ 
+        style={{
           backgroundColor: "var(--color-card)",
-          borderTop: "1px solid var(--color-border)"
+          borderTop: "1px solid var(--color-border)",
         }}
       >
         {/* Drag Handle */}
         <div className="flex justify-center pt-3 pb-2">
-          <div className="w-12 h-1.5 rounded-full" style={{ backgroundColor: "var(--color-border)" }} />
+          <div
+            className="w-12 h-1.5 rounded-full"
+            style={{ backgroundColor: "var(--color-border)" }}
+          />
         </div>
 
         {/* Header */}
         {title && (
-          <div className="px-6 py-4" style={{ borderBottom: "1px solid var(--color-border)" }}>
-            <h3 className="text-lg font-semibold" style={{ color: "var(--color-text-primary)" }}>{title}</h3>
+          <div
+            className="px-6 py-4"
+            style={{ borderBottom: "1px solid var(--color-border)" }}
+          >
+            <h3
+              className="text-lg font-semibold"
+              style={{ color: "var(--color-text-primary)" }}
+            >
+              {title}
+            </h3>
           </div>
         )}
 

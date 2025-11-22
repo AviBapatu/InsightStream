@@ -1,3 +1,19 @@
+/**
+ * SavedPage Component
+ *
+ * Displays user's saved/bookmarked articles with advanced filtering and sorting.
+ * Features:
+ * - Grid and list view toggle
+ * - Search functionality with debouncing
+ * - Filter by source
+ * - Sort by date or alphabetically
+ * - Responsive design
+ * - Smooth animations
+ * - Scroll to top button
+ *
+ * Uses the new modular component library for consistent styling.
+ */
+
 import React, { useEffect, useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
@@ -6,6 +22,14 @@ import { useAuthStore } from "../store/useAuthStore";
 import { useBookmarksStore } from "../store/useBookmarksStore";
 import { useReaderStore } from "../store/useReaderStore";
 import NewsCard from "../components/NewsCard";
+import {
+  Button,
+  Input,
+  Dropdown,
+  Card,
+  Badge,
+  Spinner,
+} from "../components/common";
 import {
   FiFilter,
   FiRepeat,
@@ -185,15 +209,26 @@ const SavedPage = () => {
               >
                 Saved Articles
               </h1>
-              <p className="text-gray-500 text-sm mt-1">
+              <p
+                className="text-sm mt-1"
+                style={{ color: "var(--color-text-secondary)" }}
+              >
                 Your saved stories across sessions.
               </p>
             </div>
 
             {/* top-right small meta */}
             <div className="hidden sm:flex flex-col items-end text-right">
-              <span className="text-xs text-gray-500">Saved</span>
-              <span className="font-medium text-gray-900">
+              <span
+                className="text-xs"
+                style={{ color: "var(--color-text-secondary)" }}
+              >
+                Saved
+              </span>
+              <span
+                className="font-medium"
+                style={{ color: "var(--color-text-primary)" }}
+              >
                 {bookmarks.length}
               </span>
             </div>
@@ -204,95 +239,80 @@ const SavedPage = () => {
             {/* left: search */}
             <div className="flex items-center gap-3 flex-1">
               <div className="relative w-full max-w-md">
-                <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-                <input
-                  className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-gold-500 focus:border-gold-500 transition"
+                <Input
+                  type="text"
                   placeholder="Search saved articles..."
                   value={rawSearch}
                   onChange={(e) => setRawSearch(e.target.value)}
+                  leftIcon={<FiSearch className="text-gray-400" />}
                 />
               </div>
 
-              {/* small reset button */}
-              <button
+              {/* Reset button */}
+              <Button
+                variant="outline"
+                size="sm"
                 onClick={() => {
                   setRawSearch("");
                   setSearch("");
                   setFilterSource("all");
                   setSortBy("recent");
                 }}
-                className="hidden sm:inline-flex items-center gap-2 px-3 py-2 rounded-lg border border-gray-200 text-sm text-gray-700 hover:bg-gray-50 transition"
-                title="Reset filters"
+                leftIcon={<FiRepeat />}
+                className="hidden sm:inline-flex"
               >
-                <FiRepeat />
                 <span className="hidden sm:inline">Reset</span>
-              </button>
+              </Button>
             </div>
 
             {/* right: icons cluster */}
             <div className="flex items-center gap-3">
-              {/* sort */}
+              {/* Sort button */}
               <button
                 onClick={cycleSort}
                 title={`Sort: ${sortBy}`}
                 className="p-2 rounded-md hover:bg-gray-50 active:scale-95 transition"
+                style={{ color: "var(--color-text-primary)" }}
               >
-                <FiChevronDown className="text-lg text-gray-700" />
+                <FiChevronDown className="text-lg" />
               </button>
 
-              {/* FILTER DROPDOWN */}
-              <div className="relative filter-dropdown">
-                <button
-                  onClick={() => setShowFilter((p) => !p)}
-                  className="p-2 rounded-md hover:bg-gray-50 active:scale-95 transition"
-                  title="Filter by source"
-                >
-                  <FiFilter className="text-lg text-gray-700" />
-                </button>
+              {/* Filter dropdown using new Dropdown component */}
+              <Dropdown
+                trigger={
+                  <button
+                    className="p-2 rounded-md hover:bg-gray-50 active:scale-95 transition"
+                    title="Filter by source"
+                    style={{ color: "var(--color-text-primary)" }}
+                  >
+                    <FiFilter className="text-lg" />
+                  </button>
+                }
+                align="right"
+                items={[
+                  {
+                    label: "All Sources",
+                    onClick: () => setFilterSource("all"),
+                  },
+                  ...(sources.length > 0 ? [{ divider: true }] : []),
+                  ...sources.map((src) => ({
+                    label: src,
+                    onClick: () => setFilterSource(src),
+                  })),
+                ]}
+              />
 
-                {showFilter && (
-                  <div className="absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded-xl shadow-lg z-20 py-2">
-                    <button
-                      className={`w-full text-left px-4 py-2 text-sm hover:bg-gray-50 ${
-                        filterSource === "all"
-                          ? "text-gold-700 font-medium"
-                          : "text-gray-700"
-                      }`}
-                      onClick={() => {
-                        setFilterSource("all");
-                        setShowFilter(false);
-                      }}
-                    >
-                      All Sources
-                    </button>
-
-                    {sources.map((src) => (
-                      <button
-                        key={src}
-                        className={`w-full text-left px-4 py-2 text-sm hover:bg-gray-50 ${
-                          filterSource === src
-                            ? "text-gold-700 font-medium"
-                            : "text-gray-700"
-                        }`}
-                        onClick={() => {
-                          setFilterSource(src);
-                          setShowFilter(false);
-                        }}
-                      >
-                        {src}
-                      </button>
-                    ))}
-                  </div>
-                )}
-              </div>
-
-              {/* view toggles */}
+              {/* View toggles */}
               <button
                 onClick={() => setView("grid")}
                 title="Grid view"
-                className={`p-2 rounded-md hover:bg-gray-50 active:scale-95 transition ${
-                  view === "grid" ? "text-gold-700" : "text-gray-700"
-                }`}
+                className="p-2 rounded-md hover:bg-gray-50 active:scale-95 transition"
+                style={{
+                  color:
+                    view === "grid"
+                      ? "var(--color-primary-700)"
+                      : "var(--color-text-primary)",
+                }}
               >
                 <FiGrid className="text-lg" />
               </button>
@@ -300,9 +320,13 @@ const SavedPage = () => {
               <button
                 onClick={() => setView("list")}
                 title="List view"
-                className={`p-2 rounded-md hover:bg-gray-50 active:scale-95 transition ${
-                  view === "list" ? "text-gold-700" : "text-gray-700"
-                }`}
+                className="p-2 rounded-md hover:bg-gray-50 active:scale-95 transition"
+                style={{
+                  color:
+                    view === "list"
+                      ? "var(--color-primary-700)"
+                      : "var(--color-text-primary)",
+                }}
               >
                 <FiList className="text-lg" />
               </button>
@@ -311,30 +335,40 @@ const SavedPage = () => {
 
           {/* content */}
           <section className="mt-6">
-            {/* skeleton */}
+            {/* skeleton loader */}
             {loading && (
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 animate-pulse">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
                 {[...Array(8)].map((_, i) => (
-                  <div
-                    key={i}
-                    className="rounded-2xl overflow-hidden bg-gray-200 h-44"
-                  />
+                  <div key={i} className="animate-pulse">
+                    <Card padding="md" className="h-44">
+                      <div
+                        className="h-full rounded-lg"
+                        style={{ backgroundColor: "var(--color-muted)" }}
+                      />
+                    </Card>
+                  </div>
                 ))}
               </div>
             )}
 
             {/* empty state */}
             {!loading && displayed.length === 0 && (
-              <div className="mt-20 text-center text-gray-500">
+              <Card padding="xl" className="mt-20 text-center">
                 <div className="text-5xl mb-4">
                   {bookmarks.length === 0 ? "📁" : "🔍"}
                 </div>
-                <h2 className="text-xl font-medium text-gray-800">
+                <h2
+                  className="text-xl font-medium"
+                  style={{ color: "var(--color-text-primary)" }}
+                >
                   {bookmarks.length === 0
                     ? "No Saved Articles"
                     : "No Results Found"}
                 </h2>
-                <p className="text-gray-500 mt-1">
+                <p
+                  className="mt-2"
+                  style={{ color: "var(--color-text-secondary)" }}
+                >
                   {bookmarks.length === 0
                     ? "Bookmark news stories and they'll appear here."
                     : search
@@ -343,7 +377,7 @@ const SavedPage = () => {
                     ? `No articles from ${filterSource}. Try another filter.`
                     : "No articles match your filters."}
                 </p>
-              </div>
+              </Card>
             )}
 
             {/* grid */}
@@ -390,12 +424,19 @@ const SavedPage = () => {
                       key={item.id || item.article.url}
                       variants={itemVariants}
                       layout
-                      className="flex gap-4 border border-gray-200 rounded-xl p-4 hover:shadow transition cursor-pointer"
+                      className="flex gap-4 rounded-xl p-4 hover:shadow transition cursor-pointer"
+                      style={{
+                        border: "1px solid var(--color-border)",
+                        backgroundColor: "var(--color-card)",
+                      }}
                       onClick={() => handleOpenArticle(item.article)}
                       whileHover={{ scale: 1.01 }}
                       whileTap={{ scale: 0.99 }}
                     >
-                      <div className="w-36 h-24 shrink-0 rounded-lg overflow-hidden bg-gray-100">
+                      <div
+                        className="w-36 h-24 shrink-0 rounded-lg overflow-hidden"
+                        style={{ backgroundColor: "var(--color-muted)" }}
+                      >
                         {item.article.urlToImage ? (
                           <img
                             src={item.article.urlToImage}
@@ -403,21 +444,33 @@ const SavedPage = () => {
                             alt=""
                           />
                         ) : (
-                          <div className="w-full h-full flex items-center justify-center text-gray-400 text-xs">
+                          <div
+                            className="w-full h-full flex items-center justify-center text-xs"
+                            style={{ color: "var(--color-text-secondary)" }}
+                          >
                             No Image
                           </div>
                         )}
                       </div>
 
                       <div className="flex-1 min-w-0">
-                        <h3 className="font-semibold text-lg line-clamp-2 text-gray-900">
+                        <h3
+                          className="font-semibold text-lg line-clamp-2"
+                          style={{ color: "var(--color-text-primary)" }}
+                        >
                           {item.article.title}
                         </h3>
-                        <div className="mt-2 text-xs text-gray-500">
+                        <div
+                          className="mt-2 text-xs"
+                          style={{ color: "var(--color-text-secondary)" }}
+                        >
                           {item.article.source?.name || "Unknown Source"} •{" "}
                           {new Date(item.savedAt).toLocaleDateString()}
                         </div>
-                        <p className="mt-3 text-gray-700 text-sm line-clamp-3">
+                        <p
+                          className="mt-3 text-sm line-clamp-3"
+                          style={{ color: "var(--color-text-primary)" }}
+                        >
                           {item.article.description}
                         </p>
                       </div>
@@ -430,12 +483,15 @@ const SavedPage = () => {
 
           {/* scroll to top */}
           {showScroll && (
-            <button
-              onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-              className="fixed bottom-6 right-6 bg-gold-700 text-white px-4 py-2 rounded-full shadow-lg hover:bg-gold-800 transition-colors"
-            >
-              ↑ Top
-            </button>
+            <div className="fixed bottom-6 right-6 z-50">
+              <Button
+                variant="primary"
+                onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+                className="shadow-lg"
+              >
+                ↑ Top
+              </Button>
+            </div>
           )}
         </div>
       </main>

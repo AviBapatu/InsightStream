@@ -12,7 +12,13 @@ const categories = [
 
 const CategoryBar = ({ activeCategory, setActiveCategory }) => {
   return (
-    <div className="w-full border-b" style={{ backgroundColor: "var(--color-card)", borderColor: "var(--color-border)" }}>
+    <div
+      className="w-full border-b"
+      style={{
+        backgroundColor: "var(--color-card)",
+        borderColor: "var(--color-border)",
+      }}
+    >
       <div className="max-w-6xl mx-auto px-4">
         {/* Scrollable Row */}
         <div className="flex gap-2 md:gap-4 lg:gap-6 overflow-x-auto scrollbar-hide h-14 items-center lg:justify-center">
@@ -33,17 +39,18 @@ const CategoryBar = ({ activeCategory, setActiveCategory }) => {
                     ? {
                         backgroundColor: "var(--color-primary-50)",
                         color: "var(--color-primary-700)",
-                        borderColor: "var(--color-primary-200)"
+                        borderColor: "var(--color-primary-200)",
                       }
                     : {
                         color: "var(--color-text-secondary)",
-                        backgroundColor: "transparent"
+                        backgroundColor: "transparent",
                       }
                 }
                 onMouseEnter={(e) => {
                   if (!isActive) {
                     e.currentTarget.style.color = "var(--color-text-primary)";
-                    e.currentTarget.style.backgroundColor = "var(--color-background-secondary)";
+                    e.currentTarget.style.backgroundColor =
+                      "var(--color-background-secondary)";
                   }
                 }}
                 onMouseLeave={(e) => {

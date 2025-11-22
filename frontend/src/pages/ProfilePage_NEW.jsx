@@ -24,6 +24,7 @@ import { AiOutlineHeart } from "react-icons/ai";
 
 // Import new modular components
 import {
+  PageContainer,
   Card,
   Button,
   Input,
@@ -34,9 +35,7 @@ import {
   Modal,
   Toast,
   Badge,
-  Select,
 } from "../components/common";
-import { PageContainer } from "../components/layout";
 
 // Language options for NewsAPI
 const LANGUAGES = [
@@ -208,7 +207,7 @@ const ProfilePage = () => {
     return (
       <>
         <Navbar />
-        <PageContainer maxWidth="lg">
+        <PageContainer maxWidth="md">
           <Card padding="lg" shadow className="text-center mt-12">
             <h1
               className="text-2xl font-semibold mb-2"
@@ -259,7 +258,7 @@ const ProfilePage = () => {
         className="min-h-screen"
         style={{ backgroundColor: "var(--color-background)" }}
       >
-        <PageContainer maxWidth="5xl" className="py-8 lg:py-12">
+        <PageContainer maxWidth="2xl" className="py-8 lg:py-12">
           {/* Profile Header */}
           <Card padding="lg" shadow className="text-center mb-6">
             <div className="relative inline-block mb-4">
@@ -295,7 +294,7 @@ const ProfilePage = () => {
           </Card>
 
           {/* Stats Section */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
             <StatCard
               value={bookmarks.length}
               label="Saved Articles"
@@ -326,7 +325,7 @@ const ProfilePage = () => {
           </div>
 
           {/* Two Column Layout for Settings */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Left Column */}
             <div className="space-y-6">
               {/* Personal Information */}
@@ -382,36 +381,64 @@ const ProfilePage = () => {
                 >
                   {/* Language Selection */}
                   <FormField label="Preferred Language">
-                    <Select
-                      value={selectedLanguage}
-                      onChange={(e) => handleLanguageSelect(e.target.value)}
-                      options={LANGUAGES.map((lang) => ({
-                        value: lang.code,
-                        label: lang.name,
-                        icon: lang.flag,
-                      }))}
-                      placeholder="Select a language"
-                      leftIcon={
-                        LANGUAGES.find((l) => l.code === selectedLanguage)?.flag
-                      }
-                    />
+                    <div
+                      className="grid grid-cols-2 gap-2 max-h-[200px] overflow-y-auto p-2 border rounded-lg"
+                      style={{ borderColor: "var(--color-border)" }}
+                    >
+                      {LANGUAGES.map((lang) => (
+                        <button
+                          key={lang.code}
+                          onClick={() => handleLanguageSelect(lang.code)}
+                          className="flex items-center gap-2 p-2 rounded-lg transition-colors text-left"
+                          style={{
+                            backgroundColor:
+                              selectedLanguage === lang.code
+                                ? "var(--color-primary-100)"
+                                : "transparent",
+                            color:
+                              selectedLanguage === lang.code
+                                ? "var(--color-primary-700)"
+                                : "var(--color-text-primary)",
+                          }}
+                        >
+                          <span className="text-xl">{lang.flag}</span>
+                          <span className="text-sm font-medium">
+                            {lang.name}
+                          </span>
+                        </button>
+                      ))}
+                    </div>
                   </FormField>
 
                   {/* Country Selection */}
                   <FormField label="Preferred Country">
-                    <Select
-                      value={selectedCountry}
-                      onChange={(e) => handleCountrySelect(e.target.value)}
-                      options={COUNTRIES.map((country) => ({
-                        value: country.code,
-                        label: country.name,
-                        icon: country.flag,
-                      }))}
-                      placeholder="Select a country"
-                      leftIcon={
-                        COUNTRIES.find((c) => c.code === selectedCountry)?.flag
-                      }
-                    />
+                    <div
+                      className="grid grid-cols-2 gap-2 max-h-[200px] overflow-y-auto p-2 border rounded-lg"
+                      style={{ borderColor: "var(--color-border)" }}
+                    >
+                      {COUNTRIES.map((country) => (
+                        <button
+                          key={country.code}
+                          onClick={() => handleCountrySelect(country.code)}
+                          className="flex items-center gap-2 p-2 rounded-lg transition-colors text-left"
+                          style={{
+                            backgroundColor:
+                              selectedCountry === country.code
+                                ? "var(--color-primary-100)"
+                                : "transparent",
+                            color:
+                              selectedCountry === country.code
+                                ? "var(--color-primary-700)"
+                                : "var(--color-text-primary)",
+                          }}
+                        >
+                          <span className="text-xl">{country.flag}</span>
+                          <span className="text-sm font-medium">
+                            {country.name}
+                          </span>
+                        </button>
+                      ))}
+                    </div>
                   </FormField>
 
                   {prefsChanged && (

@@ -1,3 +1,54 @@
+/**
+ * Reading Statistics Utility (readingStats)
+ *
+ * Tracks user's article reading activity using localStorage.
+ * Provides methods to record article reads, retrieve statistics,
+ * and check reading history.
+ *
+ * Features:
+ * - Tracks unique article reads by URL
+ * - Stores total read count
+ * - Records last read timestamp
+ * - Prevents duplicate counting
+ * - Persists across sessions
+ *
+ * Storage:
+ * - localStorage key: 'insight_stream_reading_stats'
+ * - Stores: { totalReads, readArticles[], lastRead }
+ *
+ * Methods:
+ * - trackRead(articleUrl): Record an article as read
+ * - getStats(): Get full statistics object
+ * - getReadCount(): Get total number of articles read
+ * - hasRead(articleUrl): Check if article was already read
+ * - clearStats(): Reset all reading statistics
+ *
+ * Use Cases:
+ * - Display reading statistics on profile page
+ * - Mark articles as "already read" in UI
+ * - Track user engagement with content
+ * - Generate reading insights/analytics
+ *
+ * @example
+ * import { readingStats } from './utils/readingStats';
+ *
+ * // Track when user reads an article
+ * readingStats.trackRead(article.url);
+ *
+ * // Get total read count for display
+ * const count = readingStats.getReadCount(); // e.g., 42
+ *
+ * // Check if user already read an article
+ * if (readingStats.hasRead(article.url)) {
+ *   console.log('Already read');
+ * }
+ *
+ * // Get full statistics
+ * const stats = readingStats.getStats();
+ * console.log(stats.totalReads); // 42
+ * console.log(stats.lastRead);   // "2025-11-22T10:30:00.000Z"
+ */
+
 // Reading stats utility for tracking article reads
 
 const READING_STATS_KEY = "insight_stream_reading_stats";
