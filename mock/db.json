@@ -8,6 +8,15 @@
       "avatar": "avatar3.png",
       "language": "en",
       "country": "us"
+    },
+    {
+      "id": "c13f6ea5-854f-453c-822a-0ed4379729f3",
+      "name": "Anudeep Muppalla",
+      "email": "anudeepmuppalla@gmail.com",
+      "password": "Anudeep@1904",
+      "avatar": "avatar5.png",
+      "language": "en",
+      "country": "us"
     }
   ],
   "bookmarks": [
@@ -64,6 +73,24 @@
         "content": "The desperate search for a 5-year-old girl who was swept into the Pacific Ocean Friday as her father drowned attempting to save her continues while southern California braces for more heavy rainfall … [+3872 chars]"
       },
       "savedAt": "2025-11-16T18:18:09.432Z"
+    },
+    {
+      "id": "ba84f35a-4574-48ce-9c79-207a9848c34a",
+      "userId": "c13f6ea5-854f-453c-822a-0ed4379729f3",
+      "article": {
+        "source": {
+          "id": null,
+          "name": "Yahoo Entertainment"
+        },
+        "author": "Darshan Desai",
+        "title": "David Benavidez brutally stops Anthony Yarde to defend WBC title, announces Gilberto 'Zurdo' Ramirez fight - Yahoo Sports",
+        "description": "David Benavidez already has his next marching orders in place after running through Anthony Yarde in Riyadh.",
+        "url": "https://sports.yahoo.com/boxing/breaking-news/live/david-benavidez-vs-anthony-yarde-live-results-round-by-round-updates-ring-walks-for-stacked-card-060017541.html",
+        "urlToImage": "https://s.yimg.com/ny/api/res/1.2/RLHDG1AdxdhFPiwUM0EGbg--/YXBwaWQ9aGlnaGxhbmRlcjt3PTEyMDA7aD02NzQ7Y2Y9d2VicA--/https://s.yimg.com/os/creatr-uploaded-images/2025-11/855dd670-c825-11f0-bff7-5fd836cd356a",
+        "publishedAt": "2025-11-23T05:03:22Z",
+        "content": "\"The Monster\" proved to be far too much for \"The Beast.\"\r\nDavid Benavidez pummeled Anthony Yarde for a seventh-round TKO win in their DAZN pay-per-view main event Saturday evening in Riyadh, Saudi Ar… [+13757 chars]"
+      },
+      "savedAt": "2025-11-24T09:22:16.226Z"
     }
   ]
 }
