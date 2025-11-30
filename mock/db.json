@@ -73,6 +73,96 @@
         "content": "The desperate search for a 5-year-old girl who was swept into the Pacific Ocean Friday as her father drowned attempting to save her continues while southern California braces for more heavy rainfall … [+3872 chars]"
       },
       "savedAt": "2025-11-16T18:18:09.432Z"
+    },
+    {
+      "id": "92c00aa0-ff53-4174-aaa9-526e40e2315e",
+      "userId": "67f1912d-0d15-49d7-af99-2f3dbc9a29f9",
+      "article": {
+        "source": {
+          "id": null,
+          "name": "KIRO Seattle"
+        },
+        "author": "KIRO 7 News Staff",
+        "title": "UW study: Researchers highlight new diagnosis tied to chronic cannabis use - KIRO 7 News Seattle",
+        "description": "The University of Washington says that a condition that has been connected to chronic cannabis use has been recognized as a formal diagnosis.",
+        "url": "https://www.kiro7.com/news/local/uw-study-researchers-highlight-new-diagnosis-tied-chronic-cannabis-use/LUPADHUMVVHYHIIC4GBTERQ7SI/",
+        "urlToImage": "https://cmg-cmg-tv-10090-prod.cdn.arcpublishing.com/resizer/v2/https%3A%2F%2Fcloudfront-us-east-1.images.arcpublishing.com%2Fcmg%2FCY7X5UG2PFDK7HTTTXI5UCRQBQ.jpg?auth=fe55ded220d92f137cb93da595021fdfd4b21bb7b4067edd02650b224cd61b8b&width=1200&height=630&smart=true",
+        "publishedAt": "2025-11-23T01:31:00Z",
+        "content": "SEATTLE — The University of Washington says that a condition that has been connected to chronic cannabis use has been recognized as a formal diagnosis. \r\nCannabis hyperemesis syndrome is a condition … [+1040 chars]"
+      },
+      "savedAt": "2025-11-24T09:18:59.708Z"
+    },
+    {
+      "id": "5b47a585-ece1-4da3-bde8-41bc8b8df3d8",
+      "userId": "67f1912d-0d15-49d7-af99-2f3dbc9a29f9",
+      "article": {
+        "source": {
+          "id": null,
+          "name": "BBC News"
+        },
+        "author": null,
+        "title": "North Dakota court upholds near-total abortion ban - BBC",
+        "description": "The ban on abortion returns after three judges on the five-judge supreme court ruled it was unconstitutional.",
+        "url": "https://www.bbc.com/news/articles/crk7mk5k3yjo",
+        "urlToImage": "https://ichef.bbci.co.uk/news/1024/branded_news/33fe/live/67950d80-c7f2-11f0-a11f-5ddf808f4434.jpg",
+        "publishedAt": "2025-11-22T22:28:09Z",
+        "content": "A panel of judges in North Dakota's state Supreme Court has upheld a law that makes it a felony crime to perform an abortion in the state.\r\nThe decision reverses a lower court's ruling temporarily bl… [+1583 chars]"
+      },
+      "savedAt": "2025-11-24T09:22:20.676Z"
+    },
+    {
+      "id": "2ef89310-d5de-47b0-a490-6ef4381187a3",
+      "userId": "67f1912d-0d15-49d7-af99-2f3dbc9a29f9",
+      "article": {
+        "source": {
+          "id": null,
+          "name": "Formula 1"
+        },
+        "author": "F1",
+        "title": "WATCH: Piastri holds lead from pole in Qatar Sprint start - Formula 1",
+        "description": "Oscar Piastri held the lead at the start of the Qatar Sprint from pole as George Russell and Lando Norris maintained positions behind.",
+        "url": "https://www.formula1.com/en/latest/article/sprint-start-watch-the-opening-lap-of-the-qatar-sprint-as-piastri-maintains.1rafI9sJb0NfTV8hbxFQYK",
+        "urlToImage": "https://media.formula1.com/image/upload/t_16by9South/c_lfill,w_2048/q_auto/v1740000000/trackside-images/2025/F1_Grand_Prix_of_Qatar___Sprint__Qualifying/2249021119.webp",
+        "publishedAt": "2025-11-29T14:23:47Z",
+        "content": "Oscar Piastri held the lead at the start of the Qatar Sprint from pole as George Russell and Lando Norris maintained positions behind.\r\nFurther back, both Yuki Tsunoda and Max Verstappen moved ahead … [+449 chars]"
+      },
+      "savedAt": "2025-11-30T14:54:22.089Z"
+    },
+    {
+      "id": "92326ed3-67a0-4b4e-8dc0-3c13941fdd2a",
+      "userId": "67f1912d-0d15-49d7-af99-2f3dbc9a29f9",
+      "article": {
+        "source": {
+          "id": null,
+          "name": "BBC News"
+        },
+        "author": null,
+        "title": "Andriy Yermak: How Zelensky's right-hand man fell from power - BBC",
+        "description": "A widening corruption scandal has forced the resignation of Ukraine's second most powerful person.",
+        "url": "https://www.bbc.com/news/articles/cz0nljm4y74o",
+        "urlToImage": "https://ichef.bbci.co.uk/news/1024/branded_news/4a43/live/a72730f0-ccf6-11f0-8231-1f56aaf8d190.jpg",
+        "publishedAt": "2025-11-29T11:29:35Z",
+        "content": "James WaterhouseUkraine correspondent, in Kyiv\r\nAndriy Yermak was one of Ukraine's most powerful figures\r\nAndriy Yermak was a constant, looming presence in Ukraine's government - a seemingly immovabl… [+5287 chars]"
+      },
+      "savedAt": "2025-11-30T14:54:25.305Z"
+    },
+    {
+      "id": "de320120-ed7f-44ef-b73d-0524416ad258",
+      "userId": "67f1912d-0d15-49d7-af99-2f3dbc9a29f9",
+      "article": {
+        "source": {
+          "id": null,
+          "name": "BBC News"
+        },
+        "author": null,
+        "title": "Airbus: Flights resume as normal after software update warning - BBC",
+        "description": "Around 6,000 planes were affected after an issue that could corrupt data was discovered.",
+        "url": "https://www.bbc.com/news/articles/c4gp9d28p74o",
+        "urlToImage": "https://ichef.bbci.co.uk/news/1024/branded_news/6ecf/live/6cdbe800-cd0f-11f0-bad5-8fa639d2d00f.jpg",
+        "publishedAt": "2025-11-29T10:54:24Z",
+        "content": "Thousands of Airbus planes are being returned to normal service after being grounded for hours due to a warning that solar radiation could interfere with onboard flight control computers.\r\nThe aerosp… [+3008 chars]"
+      },
+      "savedAt": "2025-11-30T14:54:25.984Z"
     }
   ]
 }
