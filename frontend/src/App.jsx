@@ -1,35 +1,97 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React, { useEffect } from "react";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 
-function App() {
-  const [count, setCount] = useState(0)
+import Home from "./pages/Home";
+import AuthLayout from "./pages/auth/AuthLayout";
+import Login from "./pages/auth/Login";
+import Signup from "./pages/auth/Signup";
+import SavedPage from "./pages/SavedPage";
+import ProfilePage from "./pages/ProfilePage";
+import AvatarSelectPage from "./pages/AvatarSelectionPage";
 
-  return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+import ArticlePage from "./pages/ArticlePage";
+import ReaderPanel from "./components/ReaderPanel";
+
+import { useAuthStore } from "./store/useAuthStore";
+import { useBookmarksStore } from "./store/useBookmarksStore";
+import { useGuestBookmarksStore } from "./store/useGuestBookmarksStore";
+import { useThemeStore } from "./store/useThemeStore";
+
+function useBookmarksSyncOnConnectivity() {
+  const user = useAuthStore((s) => s.user);
+  const token = useAuthStore((s) => s.token);
+
+  const flushQueue = useBookmarksStore((s) => s.flushQueue);
+  const initForUser = useBookmarksStore((s) => s.initForUser);
+
+  useEffect(() => {
+    const onOnline = async () => {
+      if (user?.id) {
+        await initForUser(user.id, token);
+        await flushQueue(token);
+      }
+    };
+
+    window.addEventListener("online", onOnline);
+    return () => window.removeEventListener("online", onOnline);
+  }, [user?.id, token]);
 }
 
-export default App
+function App() {
+  const validateToken = useAuthStore((s) => s.validateToken);
+  const user = useAuthStore((s) => s.user);
+  const token = useAuthStore((s) => s.token);
+
+  const initBookmarks = useBookmarksStore((s) => s.initForUser);
+  const initializeTheme = useThemeStore((s) => s.initializeTheme);
+
+  useEffect(() => {
+    validateToken();
+  }, []);
+
+  useEffect(() => {
+    if (user?.id && token) {
+      initBookmarks(user.id, token);
+    }
+  }, [user?.id, token]);
+
+  useEffect(() => {
+    useGuestBookmarksStore.getState().load();
+  }, []);
+
+  // Initialize theme on app load
+  useEffect(() => {
+    initializeTheme();
+  }, []);
+
+  useBookmarksSyncOnConnectivity();
+
+  return (
+    <Router>
+      <Routes>
+        <Route element={<AuthLayout />}>
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+        </Route>
+
+        <Route path="/home" element={<Home />} />
+        <Route path="/article/:id" element={<ArticlePage />} />
+        <Route path="/saved" element={<SavedPage />} />
+        <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/profile/avatar" element={<AvatarSelectPage />} />
+
+        <Route path="*" element={<Navigate to="/login" />} />
+      </Routes>
+
+      {/* SIDE PANEL ALWAYS MOUNTED */}
+      <ReaderPanel />
+    </Router>
+  );
+}
+
+export default App;
