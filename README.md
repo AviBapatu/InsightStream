@@ -1,4 +1,4 @@
-# InsightStream Frontend
+# InsightStream 
 
 A modern, customizable news aggregation platform built with React + Vite.
 
