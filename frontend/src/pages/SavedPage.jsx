@@ -60,6 +60,10 @@ const SavedPage = () => {
 
   // debounce search
   useEffect(() => {
+    if (!rawSearch) {
+      setSearch("");
+      return;
+    }
     const t = setTimeout(() => setSearch(rawSearch.trim()), DEBOUNCE_MS);
     return () => clearTimeout(t);
   }, [rawSearch]);
@@ -253,11 +257,10 @@ const SavedPage = () => {
                 {showFilter && (
                   <div className="absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded-xl shadow-lg z-20 py-2">
                     <button
-                      className={`w-full text-left px-4 py-2 text-sm hover:bg-gray-50 ${
-                        filterSource === "all"
-                          ? "text-gold-700 font-medium"
-                          : "text-gray-700"
-                      }`}
+                      className={`w-full text-left px-4 py-2 text-sm hover:bg-gray-50 ${filterSource === "all"
+                        ? "text-gold-700 font-medium"
+                        : "text-gray-700"
+                        }`}
                       onClick={() => {
                         setFilterSource("all");
                         setShowFilter(false);
@@ -269,11 +272,10 @@ const SavedPage = () => {
                     {sources.map((src) => (
                       <button
                         key={src}
-                        className={`w-full text-left px-4 py-2 text-sm hover:bg-gray-50 ${
-                          filterSource === src
-                            ? "text-gold-700 font-medium"
-                            : "text-gray-700"
-                        }`}
+                        className={`w-full text-left px-4 py-2 text-sm hover:bg-gray-50 ${filterSource === src
+                          ? "text-gold-700 font-medium"
+                          : "text-gray-700"
+                          }`}
                         onClick={() => {
                           setFilterSource(src);
                           setShowFilter(false);
@@ -290,9 +292,8 @@ const SavedPage = () => {
               <button
                 onClick={() => setView("grid")}
                 title="Grid view"
-                className={`p-2 rounded-md hover:bg-gray-50 active:scale-95 transition ${
-                  view === "grid" ? "text-gold-700" : "text-gray-700"
-                }`}
+                className={`p-2 rounded-md hover:bg-gray-50 active:scale-95 transition ${view === "grid" ? "text-gold-700" : "text-gray-700"
+                  }`}
               >
                 <FiGrid className="text-lg" />
               </button>
@@ -300,9 +301,8 @@ const SavedPage = () => {
               <button
                 onClick={() => setView("list")}
                 title="List view"
-                className={`p-2 rounded-md hover:bg-gray-50 active:scale-95 transition ${
-                  view === "list" ? "text-gold-700" : "text-gray-700"
-                }`}
+                className={`p-2 rounded-md hover:bg-gray-50 active:scale-95 transition ${view === "list" ? "text-gold-700" : "text-gray-700"
+                  }`}
               >
                 <FiList className="text-lg" />
               </button>
@@ -338,10 +338,10 @@ const SavedPage = () => {
                   {bookmarks.length === 0
                     ? "Bookmark news stories and they'll appear here."
                     : search
-                    ? `No articles match "${search}". Try a different search.`
-                    : filterSource !== "all"
-                    ? `No articles from ${filterSource}. Try another filter.`
-                    : "No articles match your filters."}
+                      ? `No articles match "${search}". Try a different search.`
+                      : filterSource !== "all"
+                        ? `No articles from ${filterSource}. Try another filter.`
+                        : "No articles match your filters."}
                 </p>
               </div>
             )}
@@ -352,7 +352,7 @@ const SavedPage = () => {
                 <motion.div
                   key="grid-view"
                   variants={containerVariants}
-                  initial="hidden"
+                  initial="visible"
                   animate="visible"
                   exit="exit"
                   className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6"
@@ -361,7 +361,6 @@ const SavedPage = () => {
                     <motion.div
                       key={item.id || item.article.url}
                       variants={itemVariants}
-                      layout
                     >
                       <NewsCard
                         article={item.article}
@@ -380,7 +379,7 @@ const SavedPage = () => {
                 <motion.div
                   key="list-view"
                   variants={containerVariants}
-                  initial="hidden"
+                  initial="visible"
                   animate="visible"
                   exit="exit"
                   className="flex flex-col gap-4"
@@ -389,7 +388,6 @@ const SavedPage = () => {
                     <motion.div
                       key={item.id || item.article.url}
                       variants={itemVariants}
-                      layout
                       className="flex gap-4 border border-gray-200 rounded-xl p-4 hover:shadow transition cursor-pointer"
                       onClick={() => handleOpenArticle(item.article)}
                       whileHover={{ scale: 1.01 }}
