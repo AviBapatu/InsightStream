@@ -8,13 +8,22 @@
       "avatar": "avatar3.png",
       "language": "en",
       "country": "us"
-    }
+    },
     {
       "id": "67f1912d-0d15-49d7-af99-2f3dbc9a29f8",
       "name": "madhav",
       "email": "madhav@gmail.com",
       "password": "asdfasdf",
       "avatar": "avatar4.png",
+      "language": "en",
+      "country": "us"
+    },
+    {
+      "id": "6a09caad-f928-4826-9c87-6c06d469406c",
+      "name": "Anudeep Muppalla",
+      "email": "muppallaomkar@gmail.com",
+      "password": "Alluarjun",
+      "avatar": "avatar2.png",
       "language": "en",
       "country": "us"
     }
@@ -163,6 +172,60 @@
         "content": "Thousands of Airbus planes are being returned to normal service after being grounded for hours due to a warning that solar radiation could interfere with onboard flight control computers.\r\nThe aerosp… [+3008 chars]"
       },
       "savedAt": "2025-11-30T14:54:25.984Z"
+    },
+    {
+      "id": "63539e91-1543-442c-b7c7-1042a6b1e689",
+      "userId": "6a09caad-f928-4826-9c87-6c06d469406c",
+      "article": {
+        "source": {
+          "id": "cbs-news",
+          "name": "CBS News"
+        },
+        "author": "Kerry  Breen",
+        "title": "A toddler was given just 3 years to live after his mom noticed worrying symptoms. He proved everyone wrong. - CBS News",
+        "description": "Meghan Jenkins' son was 2 years old when he was diagnosed with cancer in 2021. His prognosis was grim, but aggressive treatment saved his life.",
+        "url": "https://www.cbsnews.com/news/pediatric-cancer-acute-lymphoblastic-leukemia-miami-florida/",
+        "urlToImage": "https://assets3.cbsnewsstatic.com/hub/i/r/2025/11/06/9ca8c33b-6029-46bc-91ce-1c86f11c654c/thumbnail/1200x630g1/b2da4676d6eab9a602ca7e67b327f643/screenshot-2025-11-06-at-10-41-50-am.png",
+        "publishedAt": "2025-11-29T13:00:14Z",
+        "content": "Meghan Jenkins had her hands full with her toddler, Malachi. He was energetic and inquisitive, eager to explore the world around him. He loved anything to do with the Miami Dolphins and played consta… [+5575 chars]"
+      },
+      "savedAt": "2025-11-30T16:14:50.276Z"
+    },
+    {
+      "id": "756bb89b-70b2-4e75-b163-c9a4f82ebafd",
+      "userId": "6a09caad-f928-4826-9c87-6c06d469406c",
+      "article": {
+        "source": {
+          "id": "the-washington-post",
+          "name": "The Washington Post"
+        },
+        "author": "Dan Diamond, Rachel Roubein",
+        "title": "FDA to impose strict new vaccine requirements, claiming child covid shot deaths - The Washington Post",
+        "description": "Vinay Prasad, the nation’s top vaccine regulator, said his team concluded that coronavirus shots were linked to children’s deaths, necessitating a new approach.",
+        "url": "https://www.washingtonpost.com/health/2025/11/29/fda-vaccine-approval-child-covid-deaths/",
+        "urlToImage": "https://www.washingtonpost.com/wp-apps/imrs.php?src=https://arc-anglerfish-washpost-prod-washpost.s3.amazonaws.com/public/6DX2RTTDKYI6ZJ7IHKCFLNY7VU.jpg&w=1440",
+        "publishedAt": "2025-11-29T13:05:35Z",
+        "content": "The nations top vaccine regulator on Friday laid out a stricter approach forfederal vaccine approvals, citing his teams conclusion, without detailing the evidence, that coronavirus vaccines had contr… [+137 chars]"
+      },
+      "savedAt": "2025-11-30T16:15:07.443Z"
+    },
+    {
+      "id": "801cd888-bd46-4e61-89dc-2ac4950465da",
+      "userId": "6a09caad-f928-4826-9c87-6c06d469406c",
+      "article": {
+        "source": {
+          "id": null,
+          "name": "BBC News"
+        },
+        "author": null,
+        "title": "Pope Leo visits Istanbul's Blue Mosque - BBC",
+        "description": "It is the first time Leo has attended a Muslim place of worship since he took up the papacy in May.",
+        "url": "https://www.bbc.com/news/articles/c4gp917zr8no",
+        "urlToImage": "https://ichef.bbci.co.uk/news/1024/branded_news/683f/live/0b0484b0-cd3d-11f0-a892-01d657345866.jpg",
+        "publishedAt": "2025-11-29T15:37:57Z",
+        "content": "Pope Leo XIV has visited Istanbul's Sultan Ahmed Mosque - widely known as the Blue Mosque - in his first visit to a Muslim place of worship since he took up the papacy in May.\r\nThe Pontiff was seen b… [+1709 chars]"
+      },
+      "savedAt": "2025-11-30T17:01:05.680Z"
     }
   ]
 }

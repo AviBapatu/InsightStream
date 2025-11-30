@@ -2,7 +2,7 @@ import { create } from "zustand";
 import api from "../api/api";
 import { v4 as uuid } from "uuid";
 
-const API_BASE = "http://localhost:5000";
+const API_BASE = "http://localhost:2000";
 
 const lsKey = (userId) => `bookmarks_${userId}`;
 
