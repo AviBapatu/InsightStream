@@ -70,7 +70,6 @@ const FilterBar = ({
     });
   };
 
-  // Render filter controls as JSX directly to avoid re-creating components
   const filterControls = (
     <>
       {/* Language */}

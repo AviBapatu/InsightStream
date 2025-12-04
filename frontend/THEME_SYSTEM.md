@@ -1,10 +1,10 @@
-# Themes Directory
+# Theme System Documentation
 
-This directory contains the core theme configuration for the application.
+This document details the core theme configuration and customization system for the application.
 
 ## Files
 
-### `themeConfig.js`
+### `src/themes/themeConfig.js`
 
 The main theme configuration file containing:
 
@@ -25,7 +25,7 @@ The main theme configuration file containing:
 
 ## Adding a New Theme
 
-To add a new predefined theme, edit `themeConfig.js`:
+To add a new predefined theme, edit `src/themes/themeConfig.js`:
 
 ```javascript
 export const predefinedThemes = [
@@ -177,16 +177,7 @@ After adding a theme:
 
 ## Related Files
 
-- `../store/useThemeStore.js` - Theme state management
-- `../components/theme/ThemeSelector.jsx` - Theme UI component
-- `../index.css` - CSS variables mapping
-- `../App.jsx` - Theme initialization
-
-## Documentation
-
-For complete documentation, see:
-
-- `/THEME_SYSTEM.md` - Full system documentation
-- `/THEME_QUICK_REFERENCE.md` - Developer quick reference
-- `/THEME_MIGRATION_GUIDE.md` - Migration guide
-- `/THEME_VISUAL_FLOW.md` - Visual architecture
+- `src/store/useThemeStore.js` - Theme state management
+- `src/components/theme/ThemeSelector.jsx` - Theme UI component
+- `src/index.css` - CSS variables mapping
+- `src/App.jsx` - Theme initialization

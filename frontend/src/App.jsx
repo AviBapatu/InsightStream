@@ -21,6 +21,7 @@ import { useAuthStore } from "./store/useAuthStore";
 import { useBookmarksStore } from "./store/useBookmarksStore";
 import { useGuestBookmarksStore } from "./store/useGuestBookmarksStore";
 import { useThemeStore } from "./store/useThemeStore";
+import { ProtectedRoute } from "./components/ProtectedRoute"
 
 function useBookmarksSyncOnConnectivity() {
   const user = useAuthStore((s) => s.user);
