@@ -181,3 +181,5 @@ After adding a theme:
 - `src/components/theme/ThemeSelector.jsx` - Theme UI component
 - `src/index.css` - CSS variables mapping
 - `src/App.jsx` - Theme initialization
+
+-- End Of File --
